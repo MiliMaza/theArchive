@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { Navbar } from './components/layout/Navbar';
 import { MarqueeBanner } from './components/layout/MarqueeBanner';
 import { Footer } from './components/layout/Footer';
@@ -12,11 +13,12 @@ import { StatsMatrixView } from './components/stats/StatsMatrixView';
 import { AboutView } from './components/about/AboutView';
 import { AdminVaultView } from './components/admin/AdminVaultView';
 
-export default function App() {
+function AppContent() {
   const [currentView, setCurrentView] = useState<string>('home');
   const [selectedSeasonId, setSelectedSeasonId] = useState<string | null>(null);
   const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
+  const { isLight } = useTheme();
 
   // Sync hash routing
   useEffect(() => {
@@ -80,8 +82,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0F0F0F] text-white font-sans-body selection:bg-[#FF5D22] selection:text-black">
-      {/* Top Navbar */}
+    <div className="min-h-screen flex flex-col bg-theme-canvas text-theme-main font-sans-body selection:bg-[#FF5D22] selection:text-black transition-colors duration-300">
+      {/* Top Navbar with Theme Switcher */}
       <Navbar
         currentView={currentView}
         onNavigate={handleNavigate}
@@ -111,7 +113,7 @@ export default function App() {
                 />
 
                 {/* High Contrast Accolades Marquee Banner */}
-                <MarqueeBanner variant="light" />
+                <MarqueeBanner variant={isLight ? 'accent' : 'light'} />
 
                 {/* Current Season 06 Active Spotlight */}
                 <CurrentSeasonBanner onSelectSeason={handleSelectSeason} />
@@ -167,5 +169,13 @@ export default function App() {
         onOpenAdmin={() => setIsAdminOpen(true)}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }

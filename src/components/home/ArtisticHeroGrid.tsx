@@ -13,11 +13,11 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
   onExploreCareer,
 }) => {
   return (
-    <div className="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-[640px] border-b border-white/10">
+    <div className="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-[640px] border-b border-theme-subtle">
       {/* Left Column: Player Identity, Massive Headline & Key Figures */}
-      <div className="lg:col-span-5 p-8 sm:p-12 md:p-14 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/10 bg-[#0F0F0F] relative overflow-hidden">
+      <div className="lg:col-span-5 p-8 sm:p-12 md:p-14 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-theme-subtle bg-theme-canvas relative overflow-hidden transition-colors duration-300">
         {/* Subtle background glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#FF5D22]/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#FF5D22]/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 
         <div className="relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FF5D22] text-black text-[10px] font-black uppercase tracking-[0.25em] mb-6 shadow-[0_0_15px_rgba(255,93,34,0.3)]">
@@ -32,24 +32,24 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
             YEAR.
           </h1>
 
-          <p className="font-serif-editorial text-lg sm:text-xl italic text-white/70 leading-relaxed max-w-md">
+          <p className="font-serif-editorial text-lg sm:text-xl italic text-theme-muted leading-relaxed max-w-md">
             "{playerProfile.tagline}"
           </p>
         </div>
 
         <div className="space-y-6 pt-8 relative z-10">
-          <div className="flex flex-wrap gap-8 sm:gap-12 items-end border-t border-white/10 pt-6">
+          <div className="flex flex-wrap gap-8 sm:gap-12 items-end border-t border-theme-subtle pt-6">
             <div>
-              <div className="text-[10px] uppercase tracking-[0.25em] text-white/40 mb-1 font-mono-code">
+              <div className="text-[10px] uppercase tracking-[0.25em] text-theme-faint mb-1 font-mono-code">
                 Career Points
               </div>
-              <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-white">
+              <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-theme-main">
                 {playerProfile.careerPoints.toLocaleString()}
               </div>
             </div>
 
             <div>
-              <div className="text-[10px] uppercase tracking-[0.25em] text-white/40 mb-1 font-mono-code">
+              <div className="text-[10px] uppercase tracking-[0.25em] text-theme-faint mb-1 font-mono-code">
                 Assists Avg
               </div>
               <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-[#FF5D22]">
@@ -58,10 +58,10 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
             </div>
 
             <div>
-              <div className="text-[10px] uppercase tracking-[0.25em] text-white/40 mb-1 font-mono-code">
+              <div className="text-[10px] uppercase tracking-[0.25em] text-theme-faint mb-1 font-mono-code">
                 Championships
               </div>
-              <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-white flex items-center gap-1.5">
+              <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-theme-main flex items-center gap-1.5">
                 <span>{playerProfile.totalChampionships}</span>
                 <Trophy className="w-5 h-5 text-[#FF5D22] inline" />
               </div>
@@ -71,7 +71,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <button
               onClick={onExploreCareer}
-              className="px-6 py-3 bg-white text-black font-bold uppercase tracking-wider text-xs flex items-center gap-2 hover:bg-[#FF5D22] hover:text-black transition-all cursor-pointer font-display"
+              className="px-6 py-3 bg-theme-main text-theme-canvas font-bold uppercase tracking-wider text-xs flex items-center gap-2 hover:bg-[#FF5D22] hover:text-black transition-all cursor-pointer font-display shadow-md"
             >
               <span>Explore Complete Journey</span>
               <ArrowRight className="w-4 h-4" />
@@ -79,7 +79,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
 
             <button
               onClick={() => onSelectSeason('06')}
-              className="px-5 py-3 border border-white/20 text-white/80 hover:text-white hover:border-white text-xs font-mono-code tracking-wider uppercase transition-colors cursor-pointer"
+              className="px-5 py-3 border border-theme-subtle text-theme-muted hover:text-theme-main hover:border-theme-main text-xs font-mono-code tracking-wider uppercase transition-colors cursor-pointer"
             >
               View Active Season
             </button>
@@ -88,7 +88,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
       </div>
 
       {/* Right Column: 2x3 Interactive Season Cells */}
-      <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 grid-rows-3 bg-[#0F0F0F]">
+      <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 grid-rows-3 bg-theme-canvas transition-colors duration-300">
         {seasonsData.map((season, idx) => {
           const isCurrent = season.isCurrentSeason;
           const isRightCol = idx % 2 === 1;
@@ -98,12 +98,12 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
             <div
               key={season.id}
               onClick={() => onSelectSeason(season.id)}
-              className={`p-7 sm:p-8 flex flex-col justify-between relative overflow-hidden transition-all duration-300 cursor-pointer group select-none border-b border-white/10 ${
-                !isRightCol ? 'sm:border-r border-white/10' : ''
+              className={`p-7 sm:p-8 flex flex-col justify-between relative overflow-hidden transition-all duration-300 cursor-pointer group select-none border-b border-theme-subtle ${
+                !isRightCol ? 'sm:border-r border-theme-subtle' : ''
               } ${isBottomRow ? 'sm:border-b-0' : ''} ${
                 isCurrent
                   ? 'bg-[#FF5D22] text-black hover:bg-[#ff6e38]'
-                  : 'hover:bg-[#1A1A1A] text-white'
+                  : 'bg-theme-canvas hover:bg-theme-panel text-theme-main'
               }`}
             >
               <div className="z-10">
@@ -131,7 +131,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
 
                 <h3
                   className={`text-xl sm:text-2xl font-bold leading-tight font-display tracking-tight ${
-                    isCurrent ? 'text-black' : 'text-white group-hover:text-white'
+                    isCurrent ? 'text-black' : 'text-theme-main group-hover:text-[#FF5D22]'
                   }`}
                 >
                   {season.team}
@@ -139,18 +139,18 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
 
                 <p
                   className={`text-[11px] mt-2 uppercase tracking-widest font-sans-body ${
-                    isCurrent ? 'text-black/70' : 'text-white/40'
+                    isCurrent ? 'text-black/70' : 'text-theme-faint'
                   }`}
                 >
                   {season.league} • {season.country}
                 </p>
 
                 <div className="mt-4 flex items-center gap-4 text-xs font-mono-code">
-                  <span className={isCurrent ? 'text-black/80 font-bold' : 'text-white/60'}>
+                  <span className={isCurrent ? 'text-black/80 font-bold' : 'text-theme-muted'}>
                     {season.stats.pointsPerGame} PPG
                   </span>
-                  <span className={isCurrent ? 'text-black/50' : 'text-white/30'}>•</span>
-                  <span className={isCurrent ? 'text-black/80 font-bold' : 'text-white/60'}>
+                  <span className={isCurrent ? 'text-black/50' : 'text-theme-dim'}>•</span>
+                  <span className={isCurrent ? 'text-black/80 font-bold' : 'text-theme-muted'}>
                     {season.stats.assistsPerGame} APG
                   </span>
                 </div>
@@ -171,7 +171,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
                   className={`season-num font-black font-display text-7xl sm:text-8xl leading-none absolute bottom-[-10px] right-2 transition-all duration-300 pointer-events-none select-none ${
                     isCurrent
                       ? '!text-black !opacity-15 group-hover:scale-105'
-                      : 'text-white opacity-5 group-hover:text-[#FF5D22] group-hover:opacity-20 group-hover:scale-105'
+                      : 'text-theme-main opacity-5 group-hover:text-[#FF5D22] group-hover:opacity-20 group-hover:scale-105'
                   }`}
                 >
                   {season.id}

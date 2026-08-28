@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Trophy, Flame, Activity, Zap, TrendingUp, Filter, ArrowUpRight } from 'lucide-react';
+import {
+  BarChart3,
+  TrendingUp,
+  Award,
+  Flame,
+  Zap,
+  ShieldCheck,
+  Trophy,
+  ArrowUpRight,
+} from 'lucide-react';
 import { seasonsData } from '../../data/seasons';
 import { playerProfile } from '../../data/player';
 
@@ -8,187 +17,191 @@ interface StatsMatrixViewProps {
 }
 
 export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason }) => {
-  const [activeMetric, setActiveMetric] = useState<'ppg' | 'apg' | 'rpg' | 'per'>('ppg');
+  const [selectedMetric, setSelectedMetric] = useState<'ppg' | 'apg' | 'rpg' | 'fg' | 'threePt'>('ppg');
 
-  const maxValues = {
-    ppg: 22,
-    apg: 10,
-    rpg: 6,
-    per: 35,
+  const getMetricValue = (season: (typeof seasonsData)[0], metric: typeof selectedMetric) => {
+    switch (metric) {
+      case 'ppg':
+        return season.stats.pointsPerGame;
+      case 'apg':
+        return season.stats.assistsPerGame;
+      case 'rpg':
+        return season.stats.reboundsPerGame;
+      case 'fg':
+        return season.stats.fieldGoalPct;
+      case 'threePt':
+        return season.stats.threePointPct;
+      default:
+        return season.stats.pointsPerGame;
+    }
+  };
+
+  const getMetricMax = (metric: typeof selectedMetric) => {
+    switch (metric) {
+      case 'ppg':
+        return 30;
+      case 'apg':
+        return 12;
+      case 'rpg':
+        return 8;
+      case 'fg':
+        return 100;
+      case 'threePt':
+        return 100;
+      default:
+        return 30;
+    }
+  };
+
+  const getMetricSuffix = (metric: typeof selectedMetric) => {
+    if (metric === 'fg' || metric === 'threePt') return '%';
+    return '';
   };
 
   return (
-    <div className="w-full bg-[#0F0F0F] min-h-screen py-12 px-6 sm:px-12 text-white">
+    <div className="w-full bg-theme-canvas min-h-screen py-12 px-6 sm:px-12 text-theme-main transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12 border-b border-white/10 pb-8">
+        <div className="mb-12 border-b border-theme-subtle pb-8">
           <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#FF5D22] tracking-[0.3em] uppercase mb-2">
             <span>Career Analytics</span>
             <span>•</span>
-            <span>Historical Breakdown</span>
+            <span>Six Campaigns</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-white uppercase mb-4">
-            Statistics & Production
+          <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
+            Statistical Matrix
           </h1>
-          <p className="font-serif-editorial text-xl italic text-white/60 max-w-2xl">
-            A comprehensive look at six seasons of high-efficiency basketball across three continents.
+          <p className="font-serif-editorial text-xl italic text-theme-muted max-w-2xl">
+            Verified production data across international professional leagues, European cups, and domestic championships.
           </p>
         </div>
 
-        {/* High-Level Career Totals Banner */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-12">
-          <div className="p-6 bg-[#141414] border border-white/10 text-center">
-            <div className="text-[10px] font-mono-code text-white/40 uppercase mb-1">Total Points</div>
-            <div className="text-3xl sm:text-4xl font-black font-display text-white">
+        {/* Aggregated Career High-Level Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div className="bg-theme-panel border border-theme-subtle p-6 shadow-sm">
+            <span className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest block mb-2">
+              Career Scoring Total
+            </span>
+            <div className="text-4xl font-black font-display text-theme-main">
               {playerProfile.careerPoints.toLocaleString()}
             </div>
-            <div className="text-[10px] text-[#FF5D22] font-mono-code mt-1">18.5 PPG Career</div>
+            <div className="text-xs font-mono-code text-[#FF5D22] mt-2">
+              18.3 PPG Career Average
+            </div>
           </div>
 
-          <div className="p-6 bg-[#141414] border border-white/10 text-center">
-            <div className="text-[10px] font-mono-code text-white/40 uppercase mb-1">Total Assists</div>
-            <div className="text-3xl sm:text-4xl font-black font-display text-[#FF5D22]">
+          <div className="bg-theme-panel border border-theme-subtle p-6 shadow-sm">
+            <span className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest block mb-2">
+              Career Playmaking
+            </span>
+            <div className="text-4xl font-black font-display text-[#FF5D22]">
               {playerProfile.careerAssists.toLocaleString()}
             </div>
-            <div className="text-[10px] text-white/60 font-mono-code mt-1">6.6 APG Career</div>
+            <div className="text-xs font-mono-code text-theme-muted mt-2">
+              7.1 APG Career Average
+            </div>
           </div>
 
-          <div className="p-6 bg-[#141414] border border-white/10 text-center">
-            <div className="text-[10px] font-mono-code text-white/40 uppercase mb-1">Games Played</div>
-            <div className="text-3xl sm:text-4xl font-black font-display text-white">
+          <div className="bg-theme-panel border border-theme-subtle p-6 shadow-sm">
+            <span className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest block mb-2">
+              Official Games
+            </span>
+            <div className="text-4xl font-black font-display text-theme-main">
               {playerProfile.careerGames}
             </div>
-            <div className="text-[10px] text-white/60 font-mono-code mt-1">220 Started</div>
-          </div>
-
-          <div className="p-6 bg-[#141414] border border-white/10 text-center">
-            <div className="text-[10px] font-mono-code text-white/40 uppercase mb-1">Total Rebounds</div>
-            <div className="text-3xl sm:text-4xl font-black font-display text-white">
-              {playerProfile.careerRebounds.toLocaleString()}
+            <div className="text-xs font-mono-code text-theme-muted mt-2">
+              229 Matches Started
             </div>
-            <div className="text-[10px] text-white/60 font-mono-code mt-1">4.9 RPG Career</div>
           </div>
 
-          <div className="p-6 bg-[#141414] border border-white/10 text-center">
-            <div className="text-[10px] font-mono-code text-white/40 uppercase mb-1">Championships</div>
-            <div className="text-3xl sm:text-4xl font-black font-display text-white flex items-center justify-center gap-1.5">
+          <div className="bg-theme-panel border border-theme-subtle p-6 shadow-sm">
+            <span className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest block mb-2">
+              Championship Rate
+            </span>
+            <div className="text-4xl font-black font-display text-theme-main flex items-center gap-2">
               <span>{playerProfile.totalChampionships}</span>
-              <Trophy className="w-5 h-5 text-[#FF5D22]" />
+              <Trophy className="w-6 h-6 text-[#FF5D22]" />
             </div>
-            <div className="text-[10px] text-amber-400 font-mono-code mt-1">3 Gold Medals</div>
-          </div>
-
-          <div className="p-6 bg-[#141414] border border-white/10 text-center">
-            <div className="text-[10px] font-mono-code text-white/40 uppercase mb-1">Clubs / Countries</div>
-            <div className="text-3xl sm:text-4xl font-black font-display text-white">
-              {playerProfile.totalClubs} / {playerProfile.totalCountries}
+            <div className="text-xs font-mono-code text-amber-500 mt-2">
+              3 Titles in 6 Campaigns
             </div>
-            <div className="text-[10px] text-white/60 font-mono-code mt-1">USA, EU, Asia, AUS</div>
           </div>
         </div>
 
-        {/* Interactive Metric Progression Graph */}
-        <section className="bg-[#141414] border border-white/10 p-8 mb-12">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/10">
+        {/* Interactive Metric Progression Chart */}
+        <section className="bg-theme-panel border border-theme-subtle p-8 sm:p-10 mb-16 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-theme-subtle">
             <div>
               <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block mb-1">
-                Progression Engine
+                Progression By Campaign
               </span>
-              <h2 className="text-2xl font-black font-display uppercase tracking-tight text-white">
-                Year-Over-Year Evolution
+              <h2 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main">
+                Six-Season Trendline
               </h2>
             </div>
 
-            <div className="flex items-center gap-1 bg-black/40 p-1 border border-white/10">
-              <button
-                onClick={() => setActiveMetric('ppg')}
-                className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer ${
-                  activeMetric === 'ppg'
-                    ? 'bg-[#FF5D22] text-black font-bold'
-                    : 'text-white/60 hover:text-white'
-                }`}
-              >
-                Points (PPG)
-              </button>
-              <button
-                onClick={() => setActiveMetric('apg')}
-                className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer ${
-                  activeMetric === 'apg'
-                    ? 'bg-[#FF5D22] text-black font-bold'
-                    : 'text-white/60 hover:text-white'
-                }`}
-              >
-                Assists (APG)
-              </button>
-              <button
-                onClick={() => setActiveMetric('rpg')}
-                className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer ${
-                  activeMetric === 'rpg'
-                    ? 'bg-[#FF5D22] text-black font-bold'
-                    : 'text-white/60 hover:text-white'
-                }`}
-              >
-                Rebounds (RPG)
-              </button>
-              <button
-                onClick={() => setActiveMetric('per')}
-                className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer ${
-                  activeMetric === 'per'
-                    ? 'bg-[#FF5D22] text-black font-bold'
-                    : 'text-white/60 hover:text-white'
-                }`}
-              >
-                Efficiency (PER)
-              </button>
+            {/* Metric Selector Tabs */}
+            <div className="flex flex-wrap gap-2">
+              {(
+                [
+                  { key: 'ppg', label: 'Points (PPG)' },
+                  { key: 'apg', label: 'Assists (APG)' },
+                  { key: 'rpg', label: 'Rebounds (RPG)' },
+                  { key: 'fg', label: 'Field Goal %' },
+                  { key: 'threePt', label: '3-Point %' },
+                ] as const
+              ).map((m) => (
+                <button
+                  key={m.key}
+                  onClick={() => setSelectedMetric(m.key)}
+                  className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border ${
+                    selectedMetric === m.key
+                      ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
+                      : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Graphical Bar Progression */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 pt-4">
+          {/* Bar Chart Visualization */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 pt-4 items-end min-h-[300px]">
             {seasonsData.map((s) => {
-              let value = 0;
-              if (activeMetric === 'ppg') value = s.stats.pointsPerGame;
-              if (activeMetric === 'apg') value = s.stats.assistsPerGame;
-              if (activeMetric === 'rpg') value = s.stats.reboundsPerGame;
-              if (activeMetric === 'per') value = s.stats.playerEfficiencyRating || 25;
-
-              const max = maxValues[activeMetric];
-              const pct = Math.min(100, Math.round((value / max) * 100));
+              const val = getMetricValue(s, selectedMetric);
+              const max = getMetricMax(selectedMetric);
+              const heightPercent = Math.min(100, Math.round((Number(val) / max) * 100));
 
               return (
                 <div
                   key={s.id}
                   onClick={() => onSelectSeason(s.id)}
-                  className="bg-black/40 border border-white/5 hover:border-[#FF5D22] p-5 flex flex-col justify-between group cursor-pointer transition-all"
+                  className="flex flex-col items-center justify-end h-full group cursor-pointer"
                 >
-                  <div className="text-center mb-6">
-                    <div className="text-xs font-mono-code text-[#FF5D22] font-bold">
-                      {s.yearRange}
-                    </div>
-                    <div className="text-xs font-bold text-white font-display truncate mt-0.5">
-                      {s.teamShort}
-                    </div>
+                  <div className="text-xs font-bold font-mono-code mb-2 text-[#FF5D22] group-hover:scale-110 transition-transform">
+                    {val}
+                    {getMetricSuffix(selectedMetric)}
                   </div>
 
-                  <div className="h-44 flex items-end justify-center py-2 relative">
-                    <div className="w-12 bg-white/5 border border-white/10 relative overflow-hidden flex items-end h-full">
-                      <div
-                        style={{ height: `${pct}%` }}
-                        className={`w-full transition-all duration-700 ${
-                          s.isCurrentSeason
-                            ? 'bg-[#FF5D22]'
-                            : 'bg-white/80 group-hover:bg-[#FF5D22]'
-                        }`}
-                      />
-                    </div>
+                  <div className="w-full bg-theme-subtle h-48 border border-theme-subtle relative flex items-end overflow-hidden">
+                    <div
+                      style={{ height: `${heightPercent}%` }}
+                      className={`w-full transition-all duration-500 ${
+                        s.isCurrentSeason
+                          ? 'bg-[#FF5D22]'
+                          : 'bg-theme-main/70 group-hover:bg-[#FF5D22]'
+                      }`}
+                    />
                   </div>
 
-                  <div className="text-center mt-4 pt-3 border-t border-white/10">
-                    <div className="text-2xl font-black font-mono-code text-white">
-                      {value}
-                    </div>
-                    <div className="text-[10px] font-mono-code text-white/40 uppercase">
+                  <div className="mt-3 text-center">
+                    <div className="text-xs font-bold font-mono-code text-theme-main">
                       Season {s.id}
+                    </div>
+                    <div className="text-[10px] text-theme-faint font-mono-code">{s.yearRange}</div>
+                    <div className="text-[10px] text-theme-muted font-display truncate max-w-[110px]">
+                      {s.team.split(' ')[0]}
                     </div>
                   </div>
                 </div>
@@ -197,50 +210,68 @@ export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason
           </div>
         </section>
 
-        {/* All-Time Career Highs Section */}
-        <section className="bg-[#141414] border border-white/10 p-8">
-          <div className="flex items-center gap-2 mb-6">
-            <Flame className="w-5 h-5 text-[#FF5D22]" />
-            <h3 className="text-2xl font-black font-display uppercase tracking-tight text-white">
-              All-Time Single-Game Highs
+        {/* All-Time Career High Single Games */}
+        <section className="bg-theme-panel border border-theme-subtle p-8 shadow-sm">
+          <div className="mb-6 pb-4 border-b border-theme-subtle">
+            <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block mb-1">
+              Apex Performances
+            </span>
+            <h3 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main">
+              All-Time Career Single-Game Records
             </h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-6 bg-black/40 border border-white/5">
-              <div className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest mb-1">
-                Points in a Game
+            <div className="p-5 bg-theme-subtle border border-theme-subtle">
+              <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
+                Points Record
               </div>
-              <div className="text-4xl font-black font-display text-white mb-2">39 PTS</div>
-              <div className="text-xs font-mono-code text-white/60">vs Chiba Jets • Jan 28, 2024</div>
-              <div className="text-[10px] text-white/40 font-sans-body mt-1">3OT B.League classic</div>
+              <div className="text-3xl font-black font-display text-[#FF5D22] mb-1">
+                41 PTS
+              </div>
+              <div className="text-xs text-theme-main font-bold">vs Melbourne United</div>
+              <div className="text-[10px] font-mono-code text-theme-faint mt-1">
+                Season 04 (2021/22) • 8/11 3PT
+              </div>
             </div>
 
-            <div className="p-6 bg-black/40 border border-white/5">
-              <div className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest mb-1">
-                Assists in a Game
+            <div className="p-5 bg-theme-subtle border border-theme-subtle">
+              <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
+                Assists Record
               </div>
-              <div className="text-4xl font-black font-display text-[#FF5D22] mb-2">18 AST</div>
-              <div className="text-xs font-mono-code text-white/60">vs Sunrockers Shibuya • Dec 16, 2023</div>
-              <div className="text-[10px] text-white/40 font-sans-body mt-1">Single-game league record</div>
+              <div className="text-3xl font-black font-display text-theme-main mb-1">
+                17 AST
+              </div>
+              <div className="text-xs text-theme-main font-bold">vs Chiba Jets</div>
+              <div className="text-[10px] font-mono-code text-theme-faint mt-1">
+                Season 06 (2023/24) • 0 Turnovers
+              </div>
             </div>
 
-            <div className="p-6 bg-black/40 border border-white/5">
-              <div className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest mb-1">
-                Rebounds in a Game
+            <div className="p-5 bg-theme-subtle border border-theme-subtle">
+              <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
+                Steals Record
               </div>
-              <div className="text-4xl font-black font-display text-white mb-2">11 REB</div>
-              <div className="text-xs font-mono-code text-white/60">vs Panathinaikos • Mar 14, 2021</div>
-              <div className="text-[10px] text-white/40 font-sans-body mt-1">Part of 19-11-16 Triple-Double</div>
+              <div className="text-3xl font-black font-display text-theme-main mb-1">
+                7 STL
+              </div>
+              <div className="text-xs text-theme-main font-bold">vs Olympiacos BC</div>
+              <div className="text-[10px] font-mono-code text-theme-faint mt-1">
+                Season 03 (2020/21) • Athens Derby
+              </div>
             </div>
 
-            <div className="p-6 bg-black/40 border border-white/5">
-              <div className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest mb-1">
-                Steals in a Game
+            <div className="p-5 bg-theme-subtle border border-theme-subtle">
+              <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
+                Rebounds Record
               </div>
-              <div className="text-4xl font-black font-display text-white mb-2">7 STL</div>
-              <div className="text-xs font-mono-code text-white/60">vs Brisbane Bullets • Nov 11, 2022</div>
-              <div className="text-[10px] text-white/40 font-sans-body mt-1">Defensive lockdown clinic</div>
+              <div className="text-3xl font-black font-display text-theme-main mb-1">
+                11 REB
+              </div>
+              <div className="text-xs text-theme-main font-bold">vs FC Barcelona</div>
+              <div className="text-[10px] font-mono-code text-theme-faint mt-1">
+                Season 05 (2022/23) • Triple-Double
+              </div>
             </div>
           </div>
         </section>
