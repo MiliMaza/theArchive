@@ -9,19 +9,19 @@ interface AboutViewProps {
 
 export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
   return (
-    <div className="w-full bg-[#0F0F0F] min-h-screen py-12 px-6 sm:px-12 text-white">
+    <div className="w-full bg-theme-canvas min-h-screen py-12 px-6 sm:px-12 text-theme-main transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12 border-b border-white/10 pb-8">
+        <div className="mb-12 border-b border-theme-subtle pb-8">
           <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#FF5D22] tracking-[0.3em] uppercase mb-2">
             <span>Athlete Profile</span>
             <span>•</span>
             <span>Personal Identity</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-white uppercase mb-4">
+          <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
             {playerProfile.name}
           </h1>
-          <p className="font-serif-editorial text-2xl italic text-white/80 max-w-3xl leading-relaxed">
+          <p className="font-serif-editorial text-2xl italic text-theme-muted max-w-3xl leading-relaxed">
             "{playerProfile.tagline}"
           </p>
         </div>
@@ -30,7 +30,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-16">
           {/* Left Column: Portrait & Physical Blueprint */}
           <div className="lg:col-span-5 space-y-8">
-            <div className="relative aspect-[3/4] bg-[#141414] border border-white/10 overflow-hidden">
+            <div className="relative aspect-[3/4] bg-theme-panel border border-theme-subtle overflow-hidden shadow-sm">
               <img
                 src="https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&auto=format&fit=crop"
                 alt={playerProfile.name}
@@ -41,35 +41,35 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
                 <span className="text-[10px] font-mono-code bg-[#FF5D22] text-black px-2.5 py-1 font-bold uppercase tracking-widest block w-max mb-2">
                   #{playerProfile.jerseyNumber} • {playerProfile.role}
                 </span>
-                <div className="text-2xl font-black font-display uppercase text-white">
+                <div className="text-2xl font-black font-display uppercase text-white drop-shadow">
                   {playerProfile.name}
                 </div>
-                <div className="text-xs font-mono-code text-white/60">
+                <div className="text-xs font-mono-code text-white/80 drop-shadow">
                   {playerProfile.currentTeam} ({playerProfile.currentCountry})
                 </div>
               </div>
             </div>
 
             {/* Physical Metrics Card */}
-            <div className="bg-[#141414] border border-white/10 p-6 space-y-4">
+            <div className="bg-theme-panel border border-theme-subtle p-6 space-y-4 shadow-sm">
               <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest block">
                 Physical Specifications
               </span>
               <div className="grid grid-cols-2 gap-4 text-xs font-mono-code">
-                <div className="p-3 bg-black/40 border border-white/5">
-                  <div className="text-white/40 text-[10px]">Height</div>
-                  <div className="text-lg font-bold text-white mt-0.5">{playerProfile.height}</div>
+                <div className="p-3 bg-theme-subtle border border-theme-subtle">
+                  <div className="text-theme-faint text-[10px]">Height</div>
+                  <div className="text-lg font-bold text-theme-main mt-0.5">{playerProfile.height}</div>
                 </div>
-                <div className="p-3 bg-black/40 border border-white/5">
-                  <div className="text-white/40 text-[10px]">Wingspan</div>
-                  <div className="text-lg font-bold text-white mt-0.5">{playerProfile.wingspan}</div>
+                <div className="p-3 bg-theme-subtle border border-theme-subtle">
+                  <div className="text-theme-faint text-[10px]">Wingspan</div>
+                  <div className="text-lg font-bold text-theme-main mt-0.5">{playerProfile.wingspan}</div>
                 </div>
-                <div className="p-3 bg-black/40 border border-white/5">
-                  <div className="text-white/40 text-[10px]">Weight</div>
-                  <div className="text-lg font-bold text-white mt-0.5">{playerProfile.weight}</div>
+                <div className="p-3 bg-theme-subtle border border-theme-subtle">
+                  <div className="text-theme-faint text-[10px]">Weight</div>
+                  <div className="text-lg font-bold text-theme-main mt-0.5">{playerProfile.weight}</div>
                 </div>
-                <div className="p-3 bg-black/40 border border-white/5">
-                  <div className="text-white/40 text-[10px]">Position</div>
+                <div className="p-3 bg-theme-subtle border border-theme-subtle">
+                  <div className="text-theme-faint text-[10px]">Position</div>
                   <div className="text-sm font-bold text-[#FF5D22] mt-0.5">{playerProfile.position}</div>
                 </div>
               </div>
@@ -79,14 +79,14 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
           {/* Right Column: Bio Narrative & Basketball Philosophy */}
           <div className="lg:col-span-7 space-y-10">
             <div className="space-y-6">
-              <h2 className="text-3xl font-black font-display uppercase tracking-tight text-white">
+              <h2 className="text-3xl font-black font-display uppercase tracking-tight text-theme-main">
                 The Journey & Story
               </h2>
-              <p className="text-base text-white/80 leading-relaxed font-sans-body">
+              <p className="text-base text-theme-muted leading-relaxed font-sans-body">
                 {playerProfile.bioSummary}
               </p>
-              <div className="p-6 bg-[#141414] border-l-2 border-[#FF5D22] my-6">
-                <p className="font-serif-editorial text-xl italic text-white/90 leading-relaxed">
+              <div className="p-6 bg-theme-panel border-l-2 border-[#FF5D22] border-y border-r border-theme-subtle my-6 shadow-sm">
+                <p className="font-serif-editorial text-xl italic text-theme-muted leading-relaxed">
                   "{playerProfile.quote}"
                 </p>
               </div>
@@ -99,19 +99,19 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {playerProfile.philosophy.map((tenet, idx) => (
-                  <div key={idx} className="p-4 bg-[#141414] border border-white/10 flex items-start gap-3">
+                  <div key={idx} className="p-4 bg-theme-panel border border-theme-subtle flex items-start gap-3 shadow-sm">
                     <span className="text-sm font-black font-display text-[#FF5D22]">
                       0{idx + 1}
                     </span>
-                    <p className="text-xs text-white/80 font-sans-body leading-relaxed">{tenet}</p>
+                    <p className="text-xs text-theme-muted font-sans-body leading-relaxed">{tenet}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Global Passport: 6 Clubs in 5 Countries */}
-            <div className="space-y-4 pt-4 border-t border-white/10">
-              <span className="text-[10px] font-mono-code text-white/40 uppercase tracking-widest block">
+            <div className="space-y-4 pt-4 border-t border-theme-subtle">
+              <span className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest block">
                 Global Career Passport
               </span>
               <div className="space-y-3">
@@ -119,23 +119,23 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
                   <div
                     key={s.id}
                     onClick={() => onSelectSeason(s.id)}
-                    className="p-3.5 bg-[#141414] border border-white/10 hover:border-[#FF5D22] flex items-center justify-between cursor-pointer transition-all group"
+                    className="p-3.5 bg-theme-panel border border-theme-subtle hover:border-[#FF5D22] flex items-center justify-between cursor-pointer transition-all group shadow-sm"
                   >
                     <div className="flex items-center gap-4">
                       <span className="text-xs font-mono-code text-[#FF5D22] font-bold">
                         {s.yearRange}
                       </span>
                       <div>
-                        <span className="text-sm font-bold text-white group-hover:text-[#FF5D22] transition-colors font-display">
+                        <span className="text-sm font-bold text-theme-main group-hover:text-[#FF5D22] transition-colors font-display">
                           {s.team}
                         </span>
-                        <span className="text-xs text-white/40 font-mono-code ml-2">
+                        <span className="text-xs text-theme-faint font-mono-code ml-2">
                           ({s.city}, {s.country})
                         </span>
                       </div>
                     </div>
 
-                    <ArrowRight className="w-4 h-4 text-white/40 group-hover:text-[#FF5D22] group-hover:translate-x-1 transition-all" />
+                    <ArrowRight className="w-4 h-4 text-theme-faint group-hover:text-[#FF5D22] group-hover:translate-x-1 transition-all" />
                   </div>
                 ))}
               </div>

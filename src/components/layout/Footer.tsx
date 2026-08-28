@@ -1,125 +1,145 @@
 import React from 'react';
-import { ArrowUp, Trophy, Globe, Lock, Shield } from 'lucide-react';
+import { ArrowUp, Lock, Globe, Instagram, Twitter, Mail, Award, Sun, Moon } from 'lucide-react';
 import { playerProfile } from '../../data/player';
-import { seasonsData } from '../../data/seasons';
+import { useTheme } from '../../context/ThemeContext';
 
 interface FooterProps {
-  onNavigate: (view: string, seasonId?: string) => void;
-  onOpenAdmin: () => void;
+  onOpenVault: () => void;
+  onNavigate: (view: 'home' | 'career' | 'memories' | 'stats' | 'about') => void;
+  onSelectSeason: (seasonId: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenAdmin }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelectSeason }) => {
+  const { theme, toggleTheme } = useTheme();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="w-full bg-[#0a0a0a] border-t border-white/10 text-white pt-16 pb-12 px-6 sm:px-12 z-20">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-white/10">
-          {/* Brand Col */}
-          <div className="md:col-span-5 space-y-4">
-            <div className="flex flex-col">
-              <span className="font-display font-black text-3xl uppercase tracking-tighter text-white">
-                {playerProfile.lastName}
-              </span>
-              <span className="text-[10px] tracking-[0.4em] uppercase text-white/40 mt-1 font-mono-code">
-                Professional Basketball Career Archive
-              </span>
-            </div>
-
-            <p className="font-serif-editorial text-lg italic text-white/70 max-w-sm leading-relaxed">
+    <footer className="w-full bg-theme-panel border-t border-theme-subtle text-theme-main transition-colors duration-300">
+      {/* Top Banner with Big Statement */}
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 border-b border-theme-subtle pb-16">
+          {/* Big Editorial Callout */}
+          <div className="lg:col-span-6 space-y-4">
+            <span className="text-[10px] font-mono-code text-[#FF5D22] tracking-[0.3em] uppercase block">
+              Official Basketball Career Archive
+            </span>
+            <h2 className="text-4xl sm:text-5xl font-black font-display tracking-tight uppercase text-theme-main">
+              {playerProfile.name}
+            </h2>
+            <p className="font-serif-editorial text-xl italic text-theme-muted max-w-md leading-relaxed">
               "{playerProfile.tagline}"
             </p>
+            <div className="pt-4 flex items-center gap-3">
+              <button
+                onClick={onOpenVault}
+                className="flex items-center gap-2 px-4 py-2 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black border border-theme-subtle text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>Admin Vault & Audit</span>
+              </button>
 
-            <div className="flex items-center gap-2 pt-2 text-xs font-mono-code text-white/40">
-              <span>{playerProfile.careerSpan}</span>
-              <span>•</span>
-              <span>6 Seasons</span>
-              <span>•</span>
-              <span>4,192 Points</span>
+              <button
+                onClick={toggleTheme}
+                className="flex items-center gap-2 px-4 py-2 bg-theme-subtle hover:bg-theme-main text-theme-main hover:text-theme-canvas border border-theme-subtle text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer"
+                title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              >
+                {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-indigo-500" />}
+                <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+              </button>
             </div>
           </div>
 
-          {/* Chapters Col */}
-          <div className="md:col-span-4 space-y-3">
-            <div className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest mb-2">
-              Career Chapters
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-xs font-mono-code">
-              {seasonsData.map((s) => (
+          {/* Quick Navigation Links */}
+          <div className="lg:col-span-3 space-y-3">
+            <span className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest block">
+              Sections
+            </span>
+            <ul className="space-y-2 text-xs font-mono-code uppercase tracking-wider">
+              <li>
                 <button
-                  key={s.id}
-                  onClick={() => onNavigate('career', s.id)}
-                  className="text-left text-white/60 hover:text-[#FF5D22] transition-colors truncate cursor-pointer"
+                  onClick={() => onNavigate('home')}
+                  className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
                 >
-                  <span className="text-white/40 mr-1.5">{s.id}</span>
-                  <span>{s.teamShort}</span>
+                  00 // Home Index
                 </button>
-              ))}
-            </div>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('career')}
+                  className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
+                >
+                  01 // Career Timeline
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('memories')}
+                  className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
+                >
+                  02 // Curated Memories
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('stats')}
+                  className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
+                >
+                  03 // Analytics Matrix
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('about')}
+                  className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
+                >
+                  04 // Profile & Philosophy
+                </button>
+              </li>
+            </ul>
           </div>
 
-          {/* Navigation Col */}
-          <div className="md:col-span-3 space-y-3">
-            <div className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest mb-2">
-              Navigation
-            </div>
-            <div className="flex flex-col gap-2 text-xs font-mono-code text-white/70">
-              <button
-                onClick={() => onNavigate('home')}
-                className="text-left hover:text-white transition-colors cursor-pointer"
-              >
-                Portfolio Home
-              </button>
-              <button
-                onClick={() => onNavigate('career')}
-                className="text-left hover:text-white transition-colors cursor-pointer"
-              >
-                Full Career & Timeline
-              </button>
-              <button
-                onClick={() => onNavigate('memories')}
-                className="text-left hover:text-white transition-colors cursor-pointer"
-              >
-                Personal Archives
-              </button>
-              <button
-                onClick={() => onNavigate('stats')}
-                className="text-left hover:text-white transition-colors cursor-pointer"
-              >
-                Analytics & Records
-              </button>
-              <button
-                onClick={() => onNavigate('about')}
-                className="text-left hover:text-white transition-colors cursor-pointer"
-              >
-                Athlete Identity & Bio
-              </button>
-              <button
-                onClick={onOpenAdmin}
-                className="text-left text-[#FF5D22] hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer pt-2"
-              >
-                <Lock className="w-3 h-3" />
-                <span>Private Vault</span>
-              </button>
-            </div>
+          {/* Six Seasons Jump */}
+          <div className="lg:col-span-3 space-y-3">
+            <span className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest block">
+              Six Seasons Directory
+            </span>
+            <ul className="space-y-1.5 text-xs font-mono-code">
+              {['06', '05', '04', '03', '02', '01'].map((num) => (
+                <li key={num}>
+                  <button
+                    onClick={() => onSelectSeason(num)}
+                    className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer flex items-center justify-between w-full"
+                  >
+                    <span>Season {num}</span>
+                    <span className="text-[10px] text-theme-faint">
+                      {num === '06' ? 'Tokyo Alvark' : num === '05' ? 'Sydney Kings' : num === '04' ? 'Real Madrid' : num === '03' ? 'Panathinaikos' : num === '02' ? 'ASVEL Villeurbanne' : 'Gonzaga / Rookie'}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Sub-footer */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-code text-white/40">
+        {/* Bottom Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-code text-theme-faint">
           <div>
-            © {new Date().getFullYear()} Maya Vance. All Career Data & Archival Media Protected.
+            © {new Date().getFullYear()} {playerProfile.name} Career Portfolio. All rights reserved.
           </div>
 
-          <button
-            onClick={scrollToTop}
-            className="flex items-center gap-2 text-white/70 hover:text-[#FF5D22] transition-colors cursor-pointer"
-          >
-            <span>Back to Top</span>
-            <ArrowUp className="w-3.5 h-3.5" />
-          </button>
+          <div className="flex items-center gap-6">
+            <span>FIBA / EuroLeague / B.League Certified</span>
+            <button
+              onClick={scrollToTop}
+              className="flex items-center gap-1.5 text-theme-main hover:text-[#FF5D22] transition-colors cursor-pointer"
+            >
+              <span>Back to top</span>
+              <ArrowUp className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </footer>
