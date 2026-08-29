@@ -1,6 +1,6 @@
 {
   "name": "Basketball Career Archive",
-  "description": "A digital archive and personal career portfolio preserving six seasons of professional basketball data, achievements, and memories.",
+  "description": "A digital archive and personal career portfolio preserving professional basketball career data, achievements, memories, and customized athlete profile.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

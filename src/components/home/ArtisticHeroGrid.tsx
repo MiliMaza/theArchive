@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowRight, Trophy, Sparkles, MapPin } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
-import { playerProfile } from '../../data/player';
 
 interface ArtisticHeroGridProps {
   onSelectSeason: (seasonId: string) => void;
@@ -12,7 +11,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
   onSelectSeason,
   onExploreCareer,
 }) => {
-  const { seasons, totalCareerPoints, totalCareerAssists, totalCareerGames } = useCareer();
+  const { seasons, totalCareerPoints, totalCareerAssists, totalCareerGames, playerProfile } = useCareer();
 
   const publicSeasons = seasons.filter((s) => s.isPublic);
   const activeSeason = seasons.find((s) => s.isCurrentSeason) || seasons[seasons.length - 1];
@@ -22,6 +21,11 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
   }, 0);
 
   const avgAssists = (totalCareerAssists / Math.max(1, totalCareerGames)).toFixed(1);
+
+  const getOrdinalWord = (n: number) => {
+    const ordinals = ['', 'FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH', 'ELEVENTH', 'TWELFTH', 'THIRTEENTH', 'FOURTEENTH', 'FIFTEENTH'];
+    return ordinals[n] || `YEAR ${n}`;
+  };
 
   return (
     <div className="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-[640px] border-b border-theme-subtle">
@@ -39,7 +43,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
 
           <h1 className="text-6xl sm:text-7xl xl:text-[88px] 2xl:text-[96px] leading-[0.84] font-black tracking-tighter uppercase mb-6 mask-text font-display">
             THE<br />
-            {seasons.length === 6 ? 'SIXTH' : `YEAR ${seasons.length}`}<br />
+            {getOrdinalWord(seasons.length)}<br />
             CHAPTER.
           </h1>
 

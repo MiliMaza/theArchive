@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowUp, Lock, Globe, Instagram, Twitter, Mail, Award, Sun, Moon } from 'lucide-react';
-import { playerProfile } from '../../data/player';
 import { useTheme } from '../../context/ThemeContext';
+import { useCareer } from '../../context/CareerContext';
 
 interface FooterProps {
   onOpenVault: () => void;
@@ -11,6 +11,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelectSeason }) => {
   const { theme, toggleTheme } = useTheme();
+  const { seasons, playerProfile } = useCareer();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -101,21 +102,21 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelec
             </ul>
           </div>
 
-          {/* Six Seasons Jump */}
+          {/* Seasons Directory */}
           <div className="lg:col-span-3 space-y-3">
             <span className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest block">
-              Six Seasons Directory
+              Career Seasons Directory ({seasons.length})
             </span>
             <ul className="space-y-1.5 text-xs font-mono-code">
-              {['06', '05', '04', '03', '02', '01'].map((num) => (
-                <li key={num}>
+              {[...seasons].reverse().map((s) => (
+                <li key={s.id}>
                   <button
-                    onClick={() => onSelectSeason(num)}
+                    onClick={() => onSelectSeason(s.id)}
                     className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer flex items-center justify-between w-full"
                   >
-                    <span>Season {num}</span>
-                    <span className="text-[10px] text-theme-faint">
-                      {num === '06' ? 'Tokyo Alvark' : num === '05' ? 'Sydney Kings' : num === '04' ? 'Real Madrid' : num === '03' ? 'Panathinaikos' : num === '02' ? 'ASVEL Villeurbanne' : 'Gonzaga / Rookie'}
+                    <span>Season {s.id}</span>
+                    <span className="text-[10px] text-theme-faint truncate max-w-[140px] text-right">
+                      {s.team}
                     </span>
                   </button>
                 </li>

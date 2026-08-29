@@ -130,6 +130,7 @@ export interface PlayerProfile {
   totalChampionships: number;
   bioSummary: string;
   quote: string;
+  profileImage?: string;
   philosophy: string[];
   socialLinks: {
     label: string;

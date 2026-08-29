@@ -1,30 +1,42 @@
-import React from 'react';
-import { Trophy, Shield, MapPin, Globe, Sparkles, Activity, FileText, ArrowRight } from 'lucide-react';
-import { playerProfile } from '../../data/player';
+import React, { useState } from 'react';
+import { Trophy, Shield, MapPin, Globe, Sparkles, Activity, FileText, ArrowRight, User, Edit } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
+import { EditAthleteProfileModal } from '../admin/modals/EditAthleteProfileModal';
 
 interface AboutViewProps {
   onSelectSeason: (seasonId: string) => void;
 }
 
 export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
-  const { seasons } = useCareer();
+  const { seasons, playerProfile } = useCareer();
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+
   return (
     <div className="w-full bg-theme-canvas min-h-screen py-12 px-6 sm:px-12 text-theme-main transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12 border-b border-theme-subtle pb-8">
-          <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#FF5D22] tracking-[0.3em] uppercase mb-2">
-            <span>Athlete Profile</span>
-            <span>•</span>
-            <span>Personal Identity</span>
+        <div className="mb-12 border-b border-theme-subtle pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#FF5D22] tracking-[0.3em] uppercase mb-2">
+              <span>Athlete Profile</span>
+              <span>•</span>
+              <span>Personal Identity</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
+              {playerProfile.name}
+            </h1>
+            <p className="font-serif-editorial text-2xl italic text-theme-muted max-w-3xl leading-relaxed">
+              "{playerProfile.tagline}"
+            </p>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
-            {playerProfile.name}
-          </h1>
-          <p className="font-serif-editorial text-2xl italic text-theme-muted max-w-3xl leading-relaxed">
-            "{playerProfile.tagline}"
-          </p>
+
+          <button
+            onClick={() => setIsEditProfileOpen(true)}
+            className="px-5 py-2.5 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black border border-theme-subtle text-xs font-mono-code font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 self-start md:self-auto shadow-sm"
+          >
+            <Edit className="w-4 h-4" />
+            <span>Edit Athlete Profile</span>
+          </button>
         </div>
 
         {/* Grid Breakdown */}
@@ -33,7 +45,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
           <div className="lg:col-span-5 space-y-8">
             <div className="relative aspect-[3/4] bg-theme-panel border border-theme-subtle overflow-hidden shadow-sm">
               <img
-                src="https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&auto=format&fit=crop"
+                src={playerProfile.profileImage || "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&auto=format&fit=crop"}
                 alt={playerProfile.name}
                 className="w-full h-full object-cover grayscale contrast-125"
               />
@@ -144,6 +156,11 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
           </div>
         </div>
       </div>
+
+      <EditAthleteProfileModal
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+      />
     </div>
   );
 };

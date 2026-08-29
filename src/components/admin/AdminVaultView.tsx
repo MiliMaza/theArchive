@@ -15,6 +15,8 @@ import {
   RotateCcw,
   Download,
   ExternalLink,
+  User,
+  Database,
 } from 'lucide-react';
 import { useCareer, VaultDocument } from '../../context/CareerContext';
 import { Season } from '../../types/career';
@@ -23,6 +25,8 @@ import { UploadMediaModal } from './modals/UploadMediaModal';
 import { AttachDocumentModal } from './modals/AttachDocumentModal';
 import { DraftMemoryModal } from './modals/DraftMemoryModal';
 import { EditSeasonModal } from './modals/EditSeasonModal';
+import { EditAthleteProfileModal } from './modals/EditAthleteProfileModal';
+import { SupabaseSyncModal } from './modals/SupabaseSyncModal';
 
 interface AdminVaultViewProps {
   onClose: () => void;
@@ -34,10 +38,12 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
     seasons,
     documents,
     privateNotes,
+    playerProfile,
     addPrivateNote,
     deletePrivateNote,
     deleteDocument,
     updateSeason,
+    deleteSeason,
     resetToDefaults,
     overallCompleteness,
   } = useCareer();
@@ -46,12 +52,15 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
   const [newNote, setNewNote] = useState('');
   
   // Modals state
+  const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isLogSeasonOpen, setIsLogSeasonOpen] = useState(false);
   const [isUploadMediaOpen, setIsUploadMediaOpen] = useState(false);
   const [isAttachDocOpen, setIsAttachDocOpen] = useState(false);
   const [isDraftMemoryOpen, setIsDraftMemoryOpen] = useState(false);
   const [editingSeason, setEditingSeason] = useState<Season | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [deletingSeasonId, setDeletingSeasonId] = useState<string | null>(null);
 
   const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +87,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                 <span className="text-xs font-mono-code bg-[#FF5D22]/20 text-[#FF5D22] px-2 py-0.5 font-bold uppercase tracking-widest border border-[#FF5D22]/30">
                   Private Career Vault
                 </span>
-                <span className="text-xs text-theme-faint font-mono-code">• Maya Vance #7 ({seasons.length} Seasons Logged)</span>
+                <span className="text-xs text-theme-faint font-mono-code">• {playerProfile.name} #{playerProfile.jerseyNumber} ({seasons.length} Seasons Logged)</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-tight text-theme-main mt-1">
                 Career Management & Archival Administration
@@ -86,7 +95,23 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
             </div>
           </div>
 
-          <div className="flex items-center gap-3 self-start sm:self-center">
+          <div className="flex flex-wrap items-center gap-3 self-start sm:self-center">
+            <button
+              onClick={() => setIsSupabaseModalOpen(true)}
+              className="px-4 py-2 bg-[#3ECF8E]/20 hover:bg-[#3ECF8E] text-[#3ECF8E] hover:text-black text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 border border-[#3ECF8E]/40 shadow-sm"
+            >
+              <Database className="w-4 h-4" />
+              <span>Supabase Cloud Sync</span>
+            </button>
+
+            <button
+              onClick={() => setIsEditProfileOpen(true)}
+              className="px-4 py-2 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 border border-theme-subtle shadow-sm"
+            >
+              <User className="w-4 h-4" />
+              <span>Edit Athlete Profile</span>
+            </button>
+
             <button
               onClick={() => setIsLogSeasonOpen(true)}
               className="px-4 py-2 bg-[#FF5D22] hover:bg-theme-main text-black hover:text-theme-canvas text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm"
@@ -151,6 +176,44 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
         {/* TAB 1: OVERVIEW & COMPLETENESS GAUGE */}
         {activeTab === 'overview' && (
           <div className="space-y-10">
+            {/* Athlete Profile Identity Card */}
+            <div className="bg-theme-panel border border-theme-subtle p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
+              <div className="flex items-center gap-5">
+                <div className="w-16 h-16 bg-theme-subtle border border-theme-subtle overflow-hidden flex-shrink-0 relative">
+                  <img
+                    src={playerProfile.profileImage || "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&auto=format&fit=crop"}
+                    alt={playerProfile.name}
+                    className="w-full h-full object-cover grayscale"
+                  />
+                  <div className="absolute bottom-0 right-0 bg-[#FF5D22] text-black text-[9px] font-mono-code font-black px-1">
+                    #{playerProfile.jerseyNumber}
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest font-bold">
+                      Active Athlete Profile
+                    </span>
+                    <span className="text-xs text-theme-faint">• {playerProfile.role}</span>
+                  </div>
+                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-theme-main">
+                    {playerProfile.name} {playerProfile.nickname ? `"${playerProfile.nickname}"` : ''}
+                  </h3>
+                  <p className="text-xs text-theme-muted font-sans-body">
+                    {playerProfile.currentTeam} ({playerProfile.currentLeague} • {playerProfile.currentCountry}) — {playerProfile.height}, {playerProfile.weight}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsEditProfileOpen(true)}
+                className="px-4 py-2 bg-[#FF5D22] hover:bg-white text-black font-mono-code text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 flex-shrink-0"
+              >
+                <User className="w-4 h-4" />
+                <span>Customize Real Data</span>
+              </button>
+            </div>
+
             {/* Quick Actions Panel */}
             <div className="bg-theme-panel border border-theme-subtle p-8 shadow-sm">
               <div className="flex items-center justify-between mb-4">
@@ -161,7 +224,33 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                   Click any action to open workflow
                 </span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                <button
+                  onClick={() => setIsSupabaseModalOpen(true)}
+                  className="p-5 bg-[#3ECF8E]/10 hover:bg-[#3ECF8E] hover:text-black border border-[#3ECF8E]/30 text-left transition-all group cursor-pointer shadow-sm"
+                >
+                  <Database className="w-6 h-6 text-[#3ECF8E] group-hover:text-black mb-3" />
+                  <div className="text-xs font-bold font-mono-code uppercase text-[#3ECF8E] group-hover:text-black">
+                    Supabase Cloud
+                  </div>
+                  <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
+                    Sync and persist your career data to PostgreSQL
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setIsEditProfileOpen(true)}
+                  className="p-5 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black border border-theme-subtle text-left transition-all group cursor-pointer shadow-sm"
+                >
+                  <User className="w-6 h-6 text-[#FF5D22] group-hover:text-black mb-3" />
+                  <div className="text-xs font-bold font-mono-code uppercase text-theme-main group-hover:text-black">
+                    Edit Athlete Profile
+                  </div>
+                  <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
+                    Update personal name, bio, photo & physical specs
+                  </div>
+                </button>
+
                 <button
                   onClick={() => setIsLogSeasonOpen(true)}
                   className="p-5 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black border border-theme-subtle text-left transition-all group cursor-pointer shadow-sm"
@@ -181,7 +270,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                 >
                   <Upload className="w-6 h-6 text-[#FF5D22] group-hover:text-black mb-3" />
                   <div className="text-xs font-bold font-mono-code uppercase text-theme-main group-hover:text-black">
-                    Upload High-Res Media
+                    Upload Media
                   </div>
                   <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
                     Import match photography & arena captures
@@ -194,7 +283,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                 >
                   <FileText className="w-6 h-6 text-[#FF5D22] group-hover:text-black mb-3" />
                   <div className="text-xs font-bold font-mono-code uppercase text-theme-main group-hover:text-black">
-                    Attach Contract PDF
+                    Attach Paperwork
                   </div>
                   <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
                     Store confidential federation & salary documents
@@ -207,7 +296,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                 >
                   <Sparkles className="w-6 h-6 text-[#FF5D22] group-hover:text-black mb-3" />
                   <div className="text-xs font-bold font-mono-code uppercase text-theme-main group-hover:text-black">
-                    Draft Private Memory
+                    Draft Memory
                   </div>
                   <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
                     Write personal game anecdotes & reflections
@@ -382,6 +471,36 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                       <span>Edit</span>
                     </button>
 
+                    {deletingSeasonId === s.id ? (
+                      <div className="flex items-center gap-1 bg-red-600/10 border border-red-600/30 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-mono-code text-red-500 font-bold uppercase">Delete?</span>
+                        <button
+                          onClick={() => {
+                            deleteSeason(s.id);
+                            setDeletingSeasonId(null);
+                          }}
+                          className="px-2 py-0.5 bg-red-600 hover:bg-red-700 text-white text-[10px] font-mono-code font-bold uppercase cursor-pointer"
+                        >
+                          Yes
+                        </button>
+                        <button
+                          onClick={() => setDeletingSeasonId(null)}
+                          className="px-1.5 py-0.5 bg-theme-subtle text-theme-muted text-[10px] font-mono-code uppercase cursor-pointer"
+                        >
+                          No
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setDeletingSeasonId(s.id)}
+                        className="px-2.5 py-1 bg-theme-subtle hover:bg-red-600 hover:text-white text-red-500 text-xs font-mono-code uppercase transition-colors cursor-pointer border border-theme-subtle flex items-center gap-1"
+                        title="Delete Season"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Delete</span>
+                      </button>
+                    )}
+
                     <button
                       onClick={() => onSelectSeason(s.id)}
                       className="px-3 py-1 bg-theme-subtle hover:bg-theme-main hover:text-theme-canvas text-theme-main text-xs font-mono-code uppercase transition-colors cursor-pointer border border-theme-subtle"
@@ -509,6 +628,16 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
       </div>
 
       {/* Dynamic Modals */}
+      <SupabaseSyncModal
+        isOpen={isSupabaseModalOpen}
+        onClose={() => setIsSupabaseModalOpen(false)}
+      />
+
+      <EditAthleteProfileModal
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+      />
+
       <LogSeasonModal
         isOpen={isLogSeasonOpen}
         onClose={() => setIsLogSeasonOpen(false)}
