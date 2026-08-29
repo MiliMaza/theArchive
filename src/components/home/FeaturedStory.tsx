@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight, BookOpen, Quote, Sparkles } from 'lucide-react';
-import { memoriesData } from '../../data/memories';
+import { useCareer } from '../../context/CareerContext';
 
 interface FeaturedStoryProps {
   onNavigateToMemories: () => void;
@@ -11,7 +11,10 @@ export const FeaturedStory: React.FC<FeaturedStoryProps> = ({
   onNavigateToMemories,
   onOpenStory,
 }) => {
-  const featuredMemory = memoriesData.find((m) => m.featured) || memoriesData[0];
+  const { memories } = useCareer();
+  const featuredMemory = memories.find((m) => m.featured) || memories[0];
+
+  if (!featuredMemory) return null;
 
   return (
     <section className="w-full border-b border-theme-subtle bg-theme-canvas px-6 sm:px-12 py-20 transition-colors duration-300">
@@ -28,7 +31,7 @@ export const FeaturedStory: React.FC<FeaturedStoryProps> = ({
             onClick={onNavigateToMemories}
             className="text-xs font-mono-code text-[#FF5D22] hover:text-theme-main uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
           >
-            <span>Explore All 7 Archives</span>
+            <span>Explore All {memories.length} Archives</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -65,9 +68,11 @@ export const FeaturedStory: React.FC<FeaturedStoryProps> = ({
               </h3>
             </div>
 
-            <p className="font-serif-editorial text-xl italic text-theme-muted leading-relaxed border-l-2 border-[#FF5D22] pl-5 my-4">
-              "{featuredMemory.quote}"
-            </p>
+            {featuredMemory.quote && (
+              <p className="font-serif-editorial text-xl italic text-theme-muted leading-relaxed border-l-2 border-[#FF5D22] pl-5 my-4">
+                "{featuredMemory.quote}"
+              </p>
+            )}
 
             <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
               {featuredMemory.excerpt}

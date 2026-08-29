@@ -9,17 +9,19 @@ import {
   Trophy,
   ArrowUpRight,
 } from 'lucide-react';
-import { seasonsData } from '../../data/seasons';
+import { useCareer } from '../../context/CareerContext';
 import { playerProfile } from '../../data/player';
+import { Season } from '../../types/career';
 
 interface StatsMatrixViewProps {
   onSelectSeason: (seasonId: string) => void;
 }
 
 export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason }) => {
+  const { seasons } = useCareer();
   const [selectedMetric, setSelectedMetric] = useState<'ppg' | 'apg' | 'rpg' | 'fg' | 'threePt'>('ppg');
 
-  const getMetricValue = (season: (typeof seasonsData)[0], metric: typeof selectedMetric) => {
+  const getMetricValue = (season: Season, metric: typeof selectedMetric) => {
     switch (metric) {
       case 'ppg':
         return season.stats.pointsPerGame;
@@ -168,7 +170,7 @@ export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason
 
           {/* Bar Chart Visualization */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 pt-4 items-end min-h-[300px]">
-            {seasonsData.map((s) => {
+            {seasons.map((s) => {
               const val = getMetricValue(s, selectedMetric);
               const max = getMetricMax(selectedMetric);
               const heightPercent = Math.min(100, Math.round((Number(val) / max) * 100));

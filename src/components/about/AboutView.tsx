@@ -1,13 +1,14 @@
 import React from 'react';
 import { Trophy, Shield, MapPin, Globe, Sparkles, Activity, FileText, ArrowRight } from 'lucide-react';
 import { playerProfile } from '../../data/player';
-import { seasonsData } from '../../data/seasons';
+import { useCareer } from '../../context/CareerContext';
 
 interface AboutViewProps {
   onSelectSeason: (seasonId: string) => void;
 }
 
 export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
+  const { seasons } = useCareer();
   return (
     <div className="w-full bg-theme-canvas min-h-screen py-12 px-6 sm:px-12 text-theme-main transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
@@ -115,7 +116,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
                 Global Career Passport
               </span>
               <div className="space-y-3">
-                {seasonsData.map((s) => (
+                {seasons.map((s) => (
                   <div
                     key={s.id}
                     onClick={() => onSelectSeason(s.id)}

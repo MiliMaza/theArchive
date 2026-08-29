@@ -12,7 +12,7 @@ import {
   ChevronRight,
   Flame,
 } from 'lucide-react';
-import { seasonsData } from '../../data/seasons';
+import { useCareer } from '../../context/CareerContext';
 import { Season } from '../../types/career';
 
 interface CareerTimelineProps {
@@ -20,6 +20,7 @@ interface CareerTimelineProps {
 }
 
 export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }) => {
+  const { seasons } = useCareer();
   const [selectedCountry, setSelectedCountry] = useState<string>('ALL');
   const [onlyTrophies, setOnlyTrophies] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'timeline' | 'grid' | 'table'>('timeline');
@@ -27,10 +28,10 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
   // Extract unique countries
-  const countries = ['ALL', ...Array.from(new Set(seasonsData.map((s) => s.country.split('/')[0].trim())))];
+  const countries = ['ALL', ...Array.from(new Set(seasons.map((s) => s.country.split('/')[0].trim())))];
 
   // Filter seasons
-  const filteredSeasons = seasonsData.filter((season) => {
+  const filteredSeasons = seasons.filter((season) => {
     const matchesCountry =
       selectedCountry === 'ALL' || season.country.toLowerCase().includes(selectedCountry.toLowerCase());
     const matchesTrophy = !onlyTrophies || season.results.some((r) => r.isTrophy || r.stage === 'Champion');

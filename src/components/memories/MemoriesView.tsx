@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, Sparkles, Trophy, MapPin, Filter, Quote, X, Calendar } from 'lucide-react';
-import { memoriesData } from '../../data/memories';
+import { useCareer } from '../../context/CareerContext';
 import { Memory } from '../../types/career';
 
 interface MemoriesViewProps {
@@ -14,9 +14,10 @@ export const MemoriesView: React.FC<MemoriesViewProps> = ({
   activeStoryId,
   onClearActiveStory,
 }) => {
+  const { memories } = useCareer();
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [readingStory, setReadingStory] = useState<Memory | null>(
-    activeStoryId ? memoriesData.find((m) => m.id === activeStoryId) || null : null
+    activeStoryId ? memories.find((m) => m.id === activeStoryId) || null : null
   );
 
   const categories = [
@@ -28,7 +29,7 @@ export const MemoriesView: React.FC<MemoriesViewProps> = ({
     'Hard Moments',
   ];
 
-  const filteredMemories = memoriesData.filter((m) => {
+  const filteredMemories = memories.filter((m) => {
     return selectedCategory === 'ALL' || m.category === selectedCategory;
   });
 

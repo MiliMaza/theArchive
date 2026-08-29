@@ -1,13 +1,18 @@
 import React from 'react';
 import { ArrowRight, Trophy, Flame, Activity, ShieldCheck, MapPin } from 'lucide-react';
-import { seasonsData } from '../../data/seasons';
+import { useCareer } from '../../context/CareerContext';
 
 interface CurrentSeasonBannerProps {
   onSelectSeason: (seasonId: string) => void;
 }
 
 export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSelectSeason }) => {
-  const currentSeason = seasonsData.find((s) => s.isCurrentSeason) || seasonsData[5];
+  const { seasons } = useCareer();
+  const currentSeason = seasons.find((s) => s.isCurrentSeason) || seasons[seasons.length - 1];
+
+  if (!currentSeason) return null;
+
+  const titleResult = currentSeason.results.find((r) => r.isTrophy || r.stage === 'Champion');
 
   return (
     <section className="w-full border-b border-theme-subtle bg-theme-panel-alt px-6 sm:px-12 py-16 transition-colors duration-300">
@@ -19,7 +24,7 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
               <span>Active Campaign</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black font-display tracking-tight text-theme-main uppercase">
-              Season 06 Spotlight — Tokyo Alvark
+              Season {currentSeason.id} Spotlight — {currentSeason.team}
             </h2>
           </div>
 
@@ -45,11 +50,11 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
             <div className="relative z-20">
               <div className="flex items-center justify-between mb-6">
                 <span className="text-[10px] font-mono-code bg-[#FF5D22] text-black px-2.5 py-1 font-bold uppercase tracking-widest">
-                  #7 Point Guard
+                  #{currentSeason.jerseyNumber} {currentSeason.position}
                 </span>
                 <span className="text-xs font-mono-code text-white/90 flex items-center gap-1.5 drop-shadow">
                   <MapPin className="w-3.5 h-3.5 text-[#FF5D22]" />
-                  <span>Tokyo, Japan</span>
+                  <span>{currentSeason.city}, {currentSeason.country}</span>
                 </span>
               </div>
 
@@ -57,20 +62,22 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
                 {currentSeason.team}
               </h3>
               <p className="text-xs text-white/80 uppercase tracking-widest font-mono-code drop-shadow">
-                {currentSeason.league} • B1 Division
+                {currentSeason.league}
               </p>
             </div>
 
             <div className="relative z-20 pt-16 space-y-4">
-              <div className="p-4 bg-black/60 backdrop-blur-md border border-white/15">
-                <div className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                  <Trophy className="w-3.5 h-3.5" />
-                  <span>Silverware Achieved</span>
+              {titleResult && (
+                <div className="p-4 bg-black/60 backdrop-blur-md border border-white/15">
+                  <div className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                    <Trophy className="w-3.5 h-3.5" />
+                    <span>Silverware Achieved</span>
+                  </div>
+                  <div className="text-sm font-bold text-white">
+                    {titleResult.competition} ({titleResult.stage})
+                  </div>
                 </div>
-                <div className="text-sm font-bold text-white">
-                  2024 Emperor Cup National Champions (MVP)
-                </div>
-              </div>
+              )}
 
               <p className="text-xs text-white/90 font-serif-editorial italic leading-relaxed drop-shadow">
                 "{currentSeason.narrative.tagline}"
@@ -83,7 +90,7 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
             <div>
               <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-[0.25em] mb-6 pb-3 border-b border-theme-subtle flex justify-between items-center">
                 <span>Official Production Splits</span>
-                <span className="text-[#FF5D22] font-bold">46 Games Started</span>
+                <span className="text-[#FF5D22] font-bold">{currentSeason.stats.games} Games Logged</span>
               </div>
 
               {/* Major Numbers Grid */}
@@ -123,44 +130,44 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
                     SPG
                   </div>
                   <div className="text-3xl font-black font-display text-theme-main">
-                    {currentSeason.stats.stealsPerGame}
+                    {currentSeason.stats.stealsPerGame || 1.8}
                   </div>
                   <div className="text-[10px] text-[#FF5D22] font-mono-code mt-1">Defensive Rating</div>
                 </div>
               </div>
 
-              {/* Shooting Efficiency Matrix: 50 / 40 / 90 */}
+              {/* Shooting Efficiency Matrix */}
               <div className="p-5 bg-theme-subtle border border-theme-subtle mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-bold uppercase tracking-wider font-display text-theme-main flex items-center gap-2">
                     <Flame className="w-4 h-4 text-[#FF5D22]" />
-                    <span>Elite 50 / 40 / 90 Efficiency Club</span>
+                    <span>Shooting Accuracy Splits</span>
                   </span>
-                  <span className="text-[10px] font-mono-code text-theme-faint">TS% 63.8</span>
+                  <span className="text-[10px] font-mono-code text-theme-faint">PER {currentSeason.stats.playerEfficiencyRating || 28.5}</span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
                     <div className="text-[10px] font-mono-code text-theme-faint mb-1">Field Goal %</div>
-                    <div className="text-xl font-bold font-mono-code text-theme-main">51.4%</div>
-                    <div className="w-full bg-theme-subtle border border-theme-subtle h-1.5 mt-2">
-                      <div className="bg-[#FF5D22] h-full w-[51.4%]" />
+                    <div className="text-xl font-bold font-mono-code text-theme-main">{currentSeason.stats.fieldGoalPct}%</div>
+                    <div className="w-full bg-theme-panel border border-theme-subtle h-1.5 mt-2 overflow-hidden">
+                      <div className="bg-[#FF5D22] h-full" style={{ width: `${Math.min(100, currentSeason.stats.fieldGoalPct)}%` }} />
                     </div>
                   </div>
 
                   <div>
                     <div className="text-[10px] font-mono-code text-theme-faint mb-1">3-Point %</div>
-                    <div className="text-xl font-bold font-mono-code text-[#FF5D22]">44.2%</div>
-                    <div className="w-full bg-theme-subtle border border-theme-subtle h-1.5 mt-2">
-                      <div className="bg-[#FF5D22] h-full w-[44.2%]" />
+                    <div className="text-xl font-bold font-mono-code text-[#FF5D22]">{currentSeason.stats.threePointPct}%</div>
+                    <div className="w-full bg-theme-panel border border-theme-subtle h-1.5 mt-2 overflow-hidden">
+                      <div className="bg-[#FF5D22] h-full" style={{ width: `${Math.min(100, currentSeason.stats.threePointPct)}%` }} />
                     </div>
                   </div>
 
                   <div>
                     <div className="text-[10px] font-mono-code text-theme-faint mb-1">Free Throw %</div>
-                    <div className="text-xl font-bold font-mono-code text-theme-main">93.0%</div>
-                    <div className="w-full bg-theme-subtle border border-theme-subtle h-1.5 mt-2">
-                      <div className="bg-[#FF5D22] h-full w-[93.0%]" />
+                    <div className="text-xl font-bold font-mono-code text-theme-main">{currentSeason.stats.freeThrowPct}%</div>
+                    <div className="w-full bg-theme-panel border border-theme-subtle h-1.5 mt-2 overflow-hidden">
+                      <div className="bg-[#FF5D22] h-full" style={{ width: `${Math.min(100, currentSeason.stats.freeThrowPct)}%` }} />
                     </div>
                   </div>
                 </div>
@@ -169,7 +176,7 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
 
             <div className="pt-4 flex flex-wrap items-center justify-between gap-4 border-t border-theme-subtle">
               <div className="text-xs font-mono-code text-theme-muted">
-                Next Match: <span className="text-theme-main font-bold">vs Utsunomiya Brex (Playoffs G1)</span>
+                Campaign ID: <span className="text-theme-main font-bold">Season {currentSeason.id} ({currentSeason.yearRange})</span>
               </div>
 
               <button

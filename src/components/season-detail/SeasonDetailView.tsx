@@ -14,7 +14,7 @@ import {
   Image as ImageIcon,
   Lock,
 } from 'lucide-react';
-import { seasonsData } from '../../data/seasons';
+import { useCareer } from '../../context/CareerContext';
 import { Season } from '../../types/career';
 
 interface SeasonDetailViewProps {
@@ -30,13 +30,28 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
   onSelectSeason,
   isAdminMode = false,
 }) => {
+  const { seasons } = useCareer();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const seasonIndex = seasonsData.findIndex((s) => s.id === seasonId);
-  const currentSeason = seasonIndex !== -1 ? seasonsData[seasonIndex] : seasonsData[0];
+  const seasonIndex = seasons.findIndex((s) => s.id === seasonId);
+  const currentSeason = seasonIndex !== -1 ? seasons[seasonIndex] : seasons[0];
 
-  const prevSeason = seasonIndex > 0 ? seasonsData[seasonIndex - 1] : null;
-  const nextSeason = seasonIndex < seasonsData.length - 1 ? seasonsData[seasonIndex + 1] : null;
+  const prevSeason = seasonIndex > 0 ? seasons[seasonIndex - 1] : null;
+  const nextSeason = seasonIndex < seasons.length - 1 ? seasons[seasonIndex + 1] : null;
+
+  if (!currentSeason) {
+    return (
+      <div className="w-full bg-theme-canvas min-h-[60vh] flex flex-col items-center justify-center p-12 text-center">
+        <h2 className="text-2xl font-bold font-display uppercase mb-4 text-theme-main">Season File Not Found</h2>
+        <button
+          onClick={onNavigateBack}
+          className="px-4 py-2 bg-[#FF5D22] text-black font-bold uppercase text-xs font-mono-code"
+        >
+          Return to Career Timeline
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full bg-theme-canvas min-h-screen pb-24 text-theme-main transition-colors duration-300">
@@ -67,7 +82,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
             )}
 
             <div className="flex items-center gap-1">
-              {seasonsData.map((s) => (
+              {seasons.map((s) => (
                 <button
                   key={s.id}
                   onClick={() => onSelectSeason(s.id)}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { CareerProvider } from './context/CareerContext';
 import { Navbar } from './components/layout/Navbar';
 import { MarqueeBanner } from './components/layout/MarqueeBanner';
 import { Footer } from './components/layout/Footer';
@@ -175,7 +176,9 @@ function AppContent() {
 export default function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <CareerProvider>
+        <AppContent />
+      </CareerProvider>
     </ThemeProvider>
   );
 }
