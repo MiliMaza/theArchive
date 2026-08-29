@@ -13,9 +13,13 @@ import {
   BookOpen,
   Image as ImageIcon,
   Lock,
+  Edit,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 import { Season } from '../../types/career';
+import { EditSeasonModal } from '../admin/modals/EditSeasonModal';
 
 interface SeasonDetailViewProps {
   seasonId: string;
@@ -30,14 +34,23 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
   onSelectSeason,
   isAdminMode = false,
 }) => {
-  const { seasons } = useCareer();
+  const { seasons, deleteSeason } = useCareer();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const seasonIndex = seasons.findIndex((s) => s.id === seasonId);
   const currentSeason = seasonIndex !== -1 ? seasons[seasonIndex] : seasons[0];
 
   const prevSeason = seasonIndex > 0 ? seasons[seasonIndex - 1] : null;
   const nextSeason = seasonIndex < seasons.length - 1 ? seasons[seasonIndex + 1] : null;
+
+  const handleDeleteSeason = () => {
+    if (!currentSeason) return;
+    deleteSeason(currentSeason.id);
+    setShowDeleteConfirm(false);
+    onNavigateBack();
+  };
 
   if (!currentSeason) {
     return (
@@ -57,21 +70,62 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
     <div className="w-full bg-theme-canvas min-h-screen pb-24 text-theme-main transition-colors duration-300">
       {/* Top Breadcrumb & Season Switcher Bar */}
       <div className="border-b border-theme-subtle bg-theme-panel/95 backdrop-blur-md sticky top-20 z-40 px-6 sm:px-12 py-4 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <button
-            onClick={onNavigateBack}
-            className="flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>All 6 Seasons</span>
-          </button>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onNavigateBack}
+              className="flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>All {seasons.length} Seasons</span>
+            </button>
 
-          {/* Quick Season Navigation (Prev / 1-6 / Next) */}
-          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Quick Admin Actions (Edit / Delete) */}
+            <div className="hidden sm:flex items-center gap-2 pl-4 border-l border-theme-subtle">
+              <button
+                onClick={() => setIsEditModalOpen(true)}
+                className="px-2.5 py-1 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black text-theme-muted hover:text-black text-[11px] font-mono-code uppercase transition-colors cursor-pointer flex items-center gap-1 border border-theme-subtle"
+                title="Edit Season Details"
+              >
+                <Edit className="w-3 h-3" />
+                <span>Edit</span>
+              </button>
+
+              {showDeleteConfirm ? (
+                <div className="flex items-center gap-1.5 bg-red-600/10 border border-red-600/30 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-mono-code text-red-500 font-bold uppercase">Delete Season {currentSeason.id}?</span>
+                  <button
+                    onClick={handleDeleteSeason}
+                    className="px-2 py-0.5 bg-red-600 hover:bg-red-700 text-white text-[10px] font-mono-code font-bold uppercase cursor-pointer"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="px-1.5 py-0.5 bg-theme-subtle text-theme-muted text-[10px] font-mono-code uppercase cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="px-2.5 py-1 bg-theme-subtle hover:bg-red-600 hover:text-white text-red-500 text-[11px] font-mono-code uppercase transition-colors cursor-pointer flex items-center gap-1 border border-theme-subtle"
+                  title="Delete Season"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  <span>Delete</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Quick Season Navigation (Prev / 1-N / Next) */}
+          <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto pb-1 sm:pb-0">
             {prevSeason ? (
               <button
                 onClick={() => onSelectSeason(prevSeason.id)}
-                className="p-2 bg-theme-subtle hover:bg-theme-subtle/80 text-theme-muted hover:text-theme-main rounded transition-colors cursor-pointer flex items-center gap-1 text-xs font-mono-code border border-theme-subtle"
+                className="p-2 bg-theme-subtle hover:bg-theme-subtle/80 text-theme-muted hover:text-theme-main rounded transition-colors cursor-pointer flex items-center gap-1 text-xs font-mono-code border border-theme-subtle flex-shrink-0"
                 title={`Previous: ${prevSeason.team}`}
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -81,7 +135,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
               <div className="w-8" />
             )}
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 flex-shrink-0">
               {seasons.map((s) => (
                 <button
                   key={s.id}
@@ -100,7 +154,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
             {nextSeason ? (
               <button
                 onClick={() => onSelectSeason(nextSeason.id)}
-                className="p-2 bg-theme-subtle hover:bg-theme-subtle/80 text-theme-muted hover:text-theme-main rounded transition-colors cursor-pointer flex items-center gap-1 text-xs font-mono-code border border-theme-subtle"
+                className="p-2 bg-theme-subtle hover:bg-theme-subtle/80 text-theme-muted hover:text-theme-main rounded transition-colors cursor-pointer flex items-center gap-1 text-xs font-mono-code border border-theme-subtle flex-shrink-0"
                 title={`Next: ${nextSeason.team}`}
               >
                 <span className="hidden sm:inline">Season {nextSeason.id}</span>
@@ -518,6 +572,14 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
             </button>
           </div>
         </div>
+      )}
+      {/* Edit Season Modal */}
+      {isEditModalOpen && currentSeason && (
+        <EditSeasonModal
+          season={currentSeason}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+        />
       )}
     </div>
   );

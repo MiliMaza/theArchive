@@ -23,6 +23,11 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
 
   const avgAssists = (totalCareerAssists / Math.max(1, totalCareerGames)).toFixed(1);
 
+  const getOrdinalWord = (n: number) => {
+    const ordinals = ['', 'FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 'NINTH', 'TENTH', 'ELEVENTH', 'TWELFTH', 'THIRTEENTH', 'FOURTEENTH', 'FIFTEENTH'];
+    return ordinals[n] || `YEAR ${n}`;
+  };
+
   return (
     <div className="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-[640px] border-b border-theme-subtle">
       {/* Left Column: Player Identity, Massive Headline & Key Figures */}
@@ -39,7 +44,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
 
           <h1 className="text-6xl sm:text-7xl xl:text-[88px] 2xl:text-[96px] leading-[0.84] font-black tracking-tighter uppercase mb-6 mask-text font-display">
             THE<br />
-            {seasons.length === 6 ? 'SIXTH' : `YEAR ${seasons.length}`}<br />
+            {getOrdinalWord(seasons.length)}<br />
             CHAPTER.
           </h1>
 

@@ -1,13 +1,31 @@
 import React from 'react';
+import { useCareer } from '../../context/CareerContext';
 
 export const MarqueeBanner: React.FC = () => {
+  const { seasons, totalCareerPoints, totalCareerAssists, totalCareerGames } = useCareer();
+
+  const getNumberWord = (n: number) => {
+    const words = ['', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN'];
+    return words[n] || `${n}`;
+  };
+
+  const trophiesCount = seasons.reduce((acc, s) => {
+    return acc + s.results.filter((r) => r.isTrophy || r.stage === 'Champion').length;
+  }, 0);
+
+  const uniqueCountriesCount = new Set(seasons.map((s) => s.country.split('/')[0].trim())).size;
+  const uniqueCities = Array.from(new Set(seasons.map((s) => s.city.toUpperCase()))).join(' • ');
+
+  const ppgAvg = totalCareerGames > 0 ? (totalCareerPoints / totalCareerGames).toFixed(1) : '15.2';
+  const apgAvg = totalCareerGames > 0 ? (totalCareerAssists / totalCareerGames).toFixed(1) : '6.8';
+
   const words = [
-    'SIX PROFESSIONAL SEASONS',
-    '3× CONTINENTAL CHAMPION',
-    '5 COUNTRIES REPRESENTED',
+    `${getNumberWord(seasons.length)} PROFESSIONAL SEASONS`,
+    `${trophiesCount}× CHAMPIONSHIP TITLES`,
+    `${uniqueCountriesCount} COUNTRIES REPRESENTED`,
     'POINT GUARD / FLOOR GENERAL',
-    '15.2 PPG • 6.8 APG CAREER',
-    'TOKYO • SYDNEY • MADRID • ATHENS • LYON • SPOKANE',
+    `${ppgAvg} PPG • ${apgAvg} APG CAREER`,
+    uniqueCities || 'TOKYO • SYDNEY • MADRID • ATHENS • LYON • SPOKANE',
     'MAYA VANCE #7',
   ];
 

@@ -27,6 +27,15 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
   const [sortField, setSortField] = useState<keyof Season['stats']>('pointsPerGame');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
+  const getNumberWord = (n: number) => {
+    const words = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen'];
+    return words[n] || `${n}`;
+  };
+
+  const earliestYear = seasons.length > 0
+    ? seasons[seasons.length - 1]?.yearRange.split('—')[0]?.trim() || seasons[0]?.yearRange.split('—')[0]?.trim() || '2018'
+    : '2018';
+
   // Extract unique countries
   const countries = ['ALL', ...Array.from(new Set(seasons.map((s) => s.country.split('/')[0].trim())))];
 
@@ -62,13 +71,13 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
           <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#FF5D22] tracking-[0.3em] uppercase mb-2">
             <span>Chronological Archive</span>
             <span>•</span>
-            <span>Six Chapters</span>
+            <span>{seasons.length === 1 ? '1 Chapter' : `${getNumberWord(seasons.length)} Chapters`}</span>
           </div>
           <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
-            The Six-Season Career
+            The {getNumberWord(seasons.length)}-Season Career
           </h1>
           <p className="font-serif-editorial text-xl italic text-theme-muted max-w-2xl">
-            Explore the tactical progression, international championships, and statistical milestones from 2018 to the present.
+            Explore the tactical progression, international championships, and statistical milestones from {earliestYear} to the present.
           </p>
         </div>
 

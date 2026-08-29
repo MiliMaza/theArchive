@@ -18,8 +18,20 @@ interface StatsMatrixViewProps {
 }
 
 export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason }) => {
-  const { seasons } = useCareer();
+  const { seasons, totalCareerPoints, totalCareerAssists, totalCareerGames } = useCareer();
   const [selectedMetric, setSelectedMetric] = useState<'ppg' | 'apg' | 'rpg' | 'fg' | 'threePt'>('ppg');
+
+  const getNumberWord = (n: number) => {
+    const words = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen'];
+    return words[n] || `${n}`;
+  };
+
+  const championshipsCount = seasons.reduce((acc, s) => {
+    return acc + s.results.filter((r) => r.isTrophy || r.stage === 'Champion').length;
+  }, 0);
+
+  const avgPpg = totalCareerGames > 0 ? (totalCareerPoints / totalCareerGames).toFixed(1) : '18.3';
+  const avgApg = totalCareerGames > 0 ? (totalCareerAssists / totalCareerGames).toFixed(1) : '7.1';
 
   const getMetricValue = (season: Season, metric: typeof selectedMetric) => {
     switch (metric) {
@@ -68,7 +80,7 @@ export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason
           <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#FF5D22] tracking-[0.3em] uppercase mb-2">
             <span>Career Analytics</span>
             <span>•</span>
-            <span>Six Campaigns</span>
+            <span>{getNumberWord(seasons.length)} Campaigns</span>
           </div>
           <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
             Statistical Matrix
@@ -85,10 +97,10 @@ export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason
               Career Scoring Total
             </span>
             <div className="text-4xl font-black font-display text-theme-main">
-              {playerProfile.careerPoints.toLocaleString()}
+              {totalCareerPoints.toLocaleString()}
             </div>
             <div className="text-xs font-mono-code text-[#FF5D22] mt-2">
-              18.3 PPG Career Average
+              {avgPpg} PPG Career Average
             </div>
           </div>
 
@@ -97,10 +109,10 @@ export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason
               Career Playmaking
             </span>
             <div className="text-4xl font-black font-display text-[#FF5D22]">
-              {playerProfile.careerAssists.toLocaleString()}
+              {totalCareerAssists.toLocaleString()}
             </div>
             <div className="text-xs font-mono-code text-theme-muted mt-2">
-              7.1 APG Career Average
+              {avgApg} APG Career Average
             </div>
           </div>
 
@@ -109,10 +121,10 @@ export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason
               Official Games
             </span>
             <div className="text-4xl font-black font-display text-theme-main">
-              {playerProfile.careerGames}
+              {totalCareerGames}
             </div>
             <div className="text-xs font-mono-code text-theme-muted mt-2">
-              229 Matches Started
+              {totalCareerGames} Matches Logged
             </div>
           </div>
 
@@ -121,11 +133,11 @@ export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason
               Championship Rate
             </span>
             <div className="text-4xl font-black font-display text-theme-main flex items-center gap-2">
-              <span>{playerProfile.totalChampionships}</span>
+              <span>{championshipsCount || playerProfile.totalChampionships}</span>
               <Trophy className="w-6 h-6 text-[#FF5D22]" />
             </div>
             <div className="text-xs font-mono-code text-amber-500 mt-2">
-              3 Titles in 6 Campaigns
+              {championshipsCount || playerProfile.totalChampionships} Titles in {seasons.length} Campaigns
             </div>
           </div>
         </div>

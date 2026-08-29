@@ -38,6 +38,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
     deletePrivateNote,
     deleteDocument,
     updateSeason,
+    deleteSeason,
     resetToDefaults,
     overallCompleteness,
   } = useCareer();
@@ -52,6 +53,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
   const [isDraftMemoryOpen, setIsDraftMemoryOpen] = useState(false);
   const [editingSeason, setEditingSeason] = useState<Season | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [deletingSeasonId, setDeletingSeasonId] = useState<string | null>(null);
 
   const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault();
@@ -381,6 +383,36 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                       <Edit className="w-3 h-3" />
                       <span>Edit</span>
                     </button>
+
+                    {deletingSeasonId === s.id ? (
+                      <div className="flex items-center gap-1 bg-red-600/10 border border-red-600/30 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-mono-code text-red-500 font-bold uppercase">Delete?</span>
+                        <button
+                          onClick={() => {
+                            deleteSeason(s.id);
+                            setDeletingSeasonId(null);
+                          }}
+                          className="px-2 py-0.5 bg-red-600 hover:bg-red-700 text-white text-[10px] font-mono-code font-bold uppercase cursor-pointer"
+                        >
+                          Yes
+                        </button>
+                        <button
+                          onClick={() => setDeletingSeasonId(null)}
+                          className="px-1.5 py-0.5 bg-theme-subtle text-theme-muted text-[10px] font-mono-code uppercase cursor-pointer"
+                        >
+                          No
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setDeletingSeasonId(s.id)}
+                        className="px-2.5 py-1 bg-theme-subtle hover:bg-red-600 hover:text-white text-red-500 text-xs font-mono-code uppercase transition-colors cursor-pointer border border-theme-subtle flex items-center gap-1"
+                        title="Delete Season"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Delete</span>
+                      </button>
+                    )}
 
                     <button
                       onClick={() => onSelectSeason(s.id)}
