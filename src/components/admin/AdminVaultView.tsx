@@ -16,6 +16,7 @@ import {
   Download,
   ExternalLink,
   User,
+  Database,
 } from 'lucide-react';
 import { useCareer, VaultDocument } from '../../context/CareerContext';
 import { Season } from '../../types/career';
@@ -25,6 +26,7 @@ import { AttachDocumentModal } from './modals/AttachDocumentModal';
 import { DraftMemoryModal } from './modals/DraftMemoryModal';
 import { EditSeasonModal } from './modals/EditSeasonModal';
 import { EditAthleteProfileModal } from './modals/EditAthleteProfileModal';
+import { SupabaseSyncModal } from './modals/SupabaseSyncModal';
 
 interface AdminVaultViewProps {
   onClose: () => void;
@@ -50,6 +52,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
   const [newNote, setNewNote] = useState('');
   
   // Modals state
+  const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isLogSeasonOpen, setIsLogSeasonOpen] = useState(false);
   const [isUploadMediaOpen, setIsUploadMediaOpen] = useState(false);
@@ -93,6 +96,14 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
           </div>
 
           <div className="flex flex-wrap items-center gap-3 self-start sm:self-center">
+            <button
+              onClick={() => setIsSupabaseModalOpen(true)}
+              className="px-4 py-2 bg-[#3ECF8E]/20 hover:bg-[#3ECF8E] text-[#3ECF8E] hover:text-black text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 border border-[#3ECF8E]/40 shadow-sm"
+            >
+              <Database className="w-4 h-4" />
+              <span>Supabase Cloud Sync</span>
+            </button>
+
             <button
               onClick={() => setIsEditProfileOpen(true)}
               className="px-4 py-2 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 border border-theme-subtle shadow-sm"
@@ -213,7 +224,20 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                   Click any action to open workflow
                 </span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                <button
+                  onClick={() => setIsSupabaseModalOpen(true)}
+                  className="p-5 bg-[#3ECF8E]/10 hover:bg-[#3ECF8E] hover:text-black border border-[#3ECF8E]/30 text-left transition-all group cursor-pointer shadow-sm"
+                >
+                  <Database className="w-6 h-6 text-[#3ECF8E] group-hover:text-black mb-3" />
+                  <div className="text-xs font-bold font-mono-code uppercase text-[#3ECF8E] group-hover:text-black">
+                    Supabase Cloud
+                  </div>
+                  <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
+                    Sync and persist your career data to PostgreSQL
+                  </div>
+                </button>
+
                 <button
                   onClick={() => setIsEditProfileOpen(true)}
                   className="p-5 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black border border-theme-subtle text-left transition-all group cursor-pointer shadow-sm"
@@ -604,6 +628,11 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
       </div>
 
       {/* Dynamic Modals */}
+      <SupabaseSyncModal
+        isOpen={isSupabaseModalOpen}
+        onClose={() => setIsSupabaseModalOpen(false)}
+      />
+
       <EditAthleteProfileModal
         isOpen={isEditProfileOpen}
         onClose={() => setIsEditProfileOpen(false)}
