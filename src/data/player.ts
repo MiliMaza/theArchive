@@ -28,6 +28,7 @@ export const playerProfile: PlayerProfile = {
     'A high-IQ floor general with an explosive first step and elite perimeter vision. Spanning six demanding seasons across NCAA Division I, France LNB Pro A, Greek EuroLeague, Spanish Liga ACB, the Australian NBL, and Japan’s B.League, Vance has built a reputation as a relentless competitor and championship-caliber leader who thrives under late-clock pressure.',
   quote:
     'Basketball isn’t played on spreadsheets. It’s played in packed gymnasiums at 9 PM on a cold Tuesday night in Athens, in the silent fourth quarters in Madrid, and in the relentless pace of Tokyo. Data measures the outcome; the work defines the soul.',
+  profileImage: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&auto=format&fit=crop',
   philosophy: [
     'Dictate the tempo before the defense sets.',
     'Footwork creates space; anticipation creates advantage.',

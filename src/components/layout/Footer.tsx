@@ -1,6 +1,5 @@
 import React from 'react';
 import { ArrowUp, Lock, Globe, Instagram, Twitter, Mail, Award, Sun, Moon } from 'lucide-react';
-import { playerProfile } from '../../data/player';
 import { useTheme } from '../../context/ThemeContext';
 import { useCareer } from '../../context/CareerContext';
 
@@ -12,7 +11,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelectSeason }) => {
   const { theme, toggleTheme } = useTheme();
-  const { seasons } = useCareer();
+  const { seasons, playerProfile } = useCareer();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

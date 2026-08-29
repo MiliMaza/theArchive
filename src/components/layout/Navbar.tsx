@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, Sparkles, Menu, X, Lock, Sun, Moon } from 'lucide-react';
-import { playerProfile } from '../../data/player';
+import { useCareer } from '../../context/CareerContext';
 import { useTheme } from '../../context/ThemeContext';
 
 interface NavbarProps {
@@ -18,6 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, isLight, toggleTheme } = useTheme();
+  const { playerProfile } = useCareer();
 
   const navItems = [
     { id: 'home', label: 'Portfolio' },
@@ -35,10 +36,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         className="flex flex-col text-left group cursor-pointer focus:outline-none"
       >
         <span className="font-display font-black text-2xl tracking-tighter uppercase leading-none text-theme-main group-hover:text-[#FF5D22] transition-colors">
-          {playerProfile.lastName}
+          {playerProfile.lastName || playerProfile.name}
         </span>
         <span className="text-[10px] tracking-[0.4em] uppercase text-theme-faint mt-1 font-mono-code">
-          Professional Athlete
+          {playerProfile.role || 'Professional Athlete'}
         </span>
       </button>
 

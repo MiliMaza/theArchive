@@ -94,6 +94,7 @@ interface CareerContextType {
   documents: VaultDocument[];
   privateNotes: string[];
   playerProfile: PlayerProfile;
+  updatePlayerProfile: (data: Partial<PlayerProfile>) => void;
   addSeason: (season: Season) => void;
   updateSeason: (seasonId: string, updatedData: Partial<Season>) => void;
   deleteSeason: (seasonId: string) => void;
@@ -119,9 +120,20 @@ const STORAGE_KEYS = {
   MEMORIES: 'vance_career_memories_v2',
   DOCUMENTS: 'vance_career_documents_v2',
   NOTES: 'vance_career_notes_v2',
+  PROFILE: 'vance_career_profile_v2',
 };
 
 export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [customProfile, setCustomProfile] = useState<Partial<PlayerProfile>>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.PROFILE);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Error loading profile from storage', e);
+    }
+    return {};
+  });
+
   const [seasons, setSeasons] = useState<Season[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SEASONS);
@@ -195,6 +207,14 @@ export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [privateNotes]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(customProfile));
+    } catch (e) {
+      console.error('Failed to save profile', e);
+    }
+  }, [customProfile]);
+
   // Aggregate stats calculations
   const totalCareerPoints = seasons.reduce((acc, s) => acc + (s.stats.totalPoints || Math.round(s.stats.pointsPerGame * s.stats.games)), 0);
   const totalCareerAssists = seasons.reduce((acc, s) => acc + (s.stats.totalAssists || Math.round(s.stats.assistsPerGame * s.stats.games)), 0);
@@ -207,8 +227,17 @@ export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const currentActiveSeason = seasons.find((s) => s.isCurrentSeason) || seasons[seasons.length - 1];
 
+  const effectiveName = customProfile.name || initialProfile.name;
+  const nameParts = effectiveName.trim().split(/\s+/);
+  const derivedFirstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : nameParts[0] || 'Athlete';
+  const derivedLastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : nameParts[0] || 'Athlete';
+
   const dynamicPlayerProfile: PlayerProfile = {
     ...initialProfile,
+    ...customProfile,
+    name: effectiveName,
+    firstName: customProfile.firstName || (customProfile.name ? derivedFirstName : initialProfile.firstName),
+    lastName: customProfile.lastName || (customProfile.name ? derivedLastName : initialProfile.lastName),
     careerPoints: totalCareerPoints,
     careerAssists: totalCareerAssists,
     careerRebounds: totalCareerRebounds,
@@ -216,9 +245,13 @@ export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     yearsActive: seasons.length,
     totalClubs: new Set(seasons.map((s) => s.team)).size,
     totalCountries: new Set(seasons.map((s) => s.country.split('/')[0].trim())).size,
-    currentTeam: currentActiveSeason ? currentActiveSeason.team : initialProfile.currentTeam,
-    currentCountry: currentActiveSeason ? currentActiveSeason.country : initialProfile.currentCountry,
-    currentLeague: currentActiveSeason ? currentActiveSeason.league : initialProfile.currentLeague,
+    currentTeam: customProfile.currentTeam || (currentActiveSeason ? currentActiveSeason.team : initialProfile.currentTeam),
+    currentCountry: customProfile.currentCountry || (currentActiveSeason ? currentActiveSeason.country : initialProfile.currentCountry),
+    currentLeague: customProfile.currentLeague || (currentActiveSeason ? currentActiveSeason.league : initialProfile.currentLeague),
+  };
+
+  const updatePlayerProfile = (data: Partial<PlayerProfile>) => {
+    setCustomProfile((prev) => ({ ...prev, ...data }));
   };
 
   const addSeason = (newSeason: Season) => {
@@ -298,11 +331,13 @@ export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setMemories(initialMemories);
     setDocuments(initialDocuments);
     setPrivateNotes(initialNotesList);
+    setCustomProfile({});
     try {
       localStorage.removeItem(STORAGE_KEYS.SEASONS);
       localStorage.removeItem(STORAGE_KEYS.MEMORIES);
       localStorage.removeItem(STORAGE_KEYS.DOCUMENTS);
       localStorage.removeItem(STORAGE_KEYS.NOTES);
+      localStorage.removeItem(STORAGE_KEYS.PROFILE);
     } catch (e) {
       console.error(e);
     }
@@ -316,6 +351,7 @@ export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         documents,
         privateNotes,
         playerProfile: dynamicPlayerProfile,
+        updatePlayerProfile,
         addSeason,
         updateSeason,
         deleteSeason,

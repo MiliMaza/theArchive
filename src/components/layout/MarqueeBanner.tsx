@@ -2,7 +2,7 @@ import React from 'react';
 import { useCareer } from '../../context/CareerContext';
 
 export const MarqueeBanner: React.FC = () => {
-  const { seasons, totalCareerPoints, totalCareerAssists, totalCareerGames } = useCareer();
+  const { seasons, totalCareerPoints, totalCareerAssists, totalCareerGames, playerProfile } = useCareer();
 
   const getNumberWord = (n: number) => {
     const words = ['', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN'];
@@ -23,10 +23,10 @@ export const MarqueeBanner: React.FC = () => {
     `${getNumberWord(seasons.length)} PROFESSIONAL SEASONS`,
     `${trophiesCount}× CHAMPIONSHIP TITLES`,
     `${uniqueCountriesCount} COUNTRIES REPRESENTED`,
-    'POINT GUARD / FLOOR GENERAL',
+    `${playerProfile.role?.toUpperCase() || 'POINT GUARD / FLOOR GENERAL'}`,
     `${ppgAvg} PPG • ${apgAvg} APG CAREER`,
     uniqueCities || 'TOKYO • SYDNEY • MADRID • ATHENS • LYON • SPOKANE',
-    'MAYA VANCE #7',
+    `${playerProfile.name?.toUpperCase() || 'ATHLETE'} #${playerProfile.jerseyNumber || 7}`,
   ];
 
   return (

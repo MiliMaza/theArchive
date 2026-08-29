@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowRight, Trophy, Sparkles, MapPin } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
-import { playerProfile } from '../../data/player';
 
 interface ArtisticHeroGridProps {
   onSelectSeason: (seasonId: string) => void;
@@ -12,7 +11,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
   onSelectSeason,
   onExploreCareer,
 }) => {
-  const { seasons, totalCareerPoints, totalCareerAssists, totalCareerGames } = useCareer();
+  const { seasons, totalCareerPoints, totalCareerAssists, totalCareerGames, playerProfile } = useCareer();
 
   const publicSeasons = seasons.filter((s) => s.isPublic);
   const activeSeason = seasons.find((s) => s.isCurrentSeason) || seasons[seasons.length - 1];
