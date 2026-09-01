@@ -659,26 +659,56 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1.5">
-                    Best Moment
+                  <label className="block text-[10px] font-mono-code text-[#FF5D22] uppercase mb-1.5 font-bold">
+                    Best Memory & Defining Triumph
                   </label>
                   <textarea
                     rows={2}
                     value={formData.bestMoment}
                     onChange={(e) => setFormData({ ...formData, bestMoment: e.target.value })}
                     className="w-full bg-theme-subtle border border-theme-subtle p-3 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
+                    placeholder="e.g. Clutch stepback buzzer-beater in the derby final."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1.5">
-                    Hardest Challenge
+                  <label className="block text-[10px] font-mono-code text-amber-500 uppercase mb-1.5 font-bold">
+                    Hardest Obstacle Overcome
                   </label>
                   <textarea
                     rows={2}
                     value={formData.hardestChallenge}
                     onChange={(e) => setFormData({ ...formData, hardestChallenge: e.target.value })}
                     className="w-full bg-theme-subtle border border-theme-subtle p-3 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
+                    placeholder="e.g. Navigating back-to-back double overtime road games."
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-mono-code text-emerald-400 uppercase mb-1.5 font-bold">
+                    What I Learned (Tactical & Psychological)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.whatILearned}
+                    onChange={(e) => setFormData({ ...formData, whatILearned: e.target.value })}
+                    className="w-full bg-theme-subtle border border-theme-subtle p-3 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
+                    placeholder="e.g. Patience in the half-court is a devastating weapon against drop coverages."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-mono-code text-blue-400 uppercase mb-1.5 font-bold">
+                    Craft Improvements
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.whatIImproved}
+                    onChange={(e) => setFormData({ ...formData, whatIImproved: e.target.value })}
+                    className="w-full bg-theme-subtle border border-theme-subtle p-3 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
+                    placeholder="e.g. Elevated pull-up three-point efficiency off ball screens to 43.5%."
                   />
                 </div>
               </div>
