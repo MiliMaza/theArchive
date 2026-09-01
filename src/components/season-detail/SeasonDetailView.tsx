@@ -16,6 +16,8 @@ import {
   Edit,
   Trash2,
   AlertTriangle,
+  Activity,
+  Plus,
 } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 import { Season } from '../../types/career';
@@ -37,6 +39,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
   const { seasons, deleteSeason } = useCareer();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editModalTab, setEditModalTab] = useState<'basics' | 'stats' | 'reflections' | 'accolades' | 'people' | 'gallery'>('basics');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const seasonIndex = seasons.findIndex((s) => s.id === seasonId);
@@ -44,6 +47,11 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
 
   const prevSeason = seasonIndex > 0 ? seasons[seasonIndex - 1] : null;
   const nextSeason = seasonIndex < seasons.length - 1 ? seasons[seasonIndex + 1] : null;
+
+  const openEditTab = (tab: 'basics' | 'stats' | 'reflections' | 'accolades' | 'people' | 'gallery') => {
+    setEditModalTab(tab);
+    setIsEditModalOpen(true);
+  };
 
   const handleDeleteSeason = () => {
     if (!currentSeason) return;
@@ -83,12 +91,12 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
             {/* Quick Admin Actions (Edit / Delete) */}
             <div className="hidden sm:flex items-center gap-2 pl-4 border-l border-theme-subtle">
               <button
-                onClick={() => setIsEditModalOpen(true)}
-                className="px-2.5 py-1 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black text-theme-muted hover:text-black text-[11px] font-mono-code uppercase transition-colors cursor-pointer flex items-center gap-1 border border-theme-subtle"
+                onClick={() => openEditTab('basics')}
+                className="px-3 py-1 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black text-theme-main text-[11px] font-mono-code font-bold uppercase transition-colors cursor-pointer flex items-center gap-1.5 border border-theme-subtle shadow-sm"
                 title="Edit Season Details"
               >
-                <Edit className="w-3 h-3" />
-                <span>Edit</span>
+                <Edit className="w-3.5 h-3.5" />
+                <span>Edit Season File</span>
               </button>
 
               {showDeleteConfirm ? (
@@ -177,19 +185,29 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
         />
 
         <div className="relative z-20 max-w-7xl mx-auto px-6 sm:px-12 py-16 sm:py-24">
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <span className="px-3 py-1 bg-[#FF5D22] text-black text-xs font-black uppercase font-mono-code tracking-widest">
-              Season {currentSeason.id} • {currentSeason.yearRange}
-            </span>
-            <span className="px-3 py-1 bg-black/60 border border-white/20 text-white text-xs font-mono-code uppercase tracking-wider">
-              {currentSeason.league}
-            </span>
-            <span className="text-xs font-mono-code text-white/90 flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-[#FF5D22]" />
-              <span>
-                {currentSeason.city}, {currentSeason.country}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="px-3 py-1 bg-[#FF5D22] text-black text-xs font-black uppercase font-mono-code tracking-widest">
+                Season {currentSeason.id} • {currentSeason.yearRange}
               </span>
-            </span>
+              <span className="px-3 py-1 bg-black/60 border border-white/20 text-white text-xs font-mono-code uppercase tracking-wider">
+                {currentSeason.league}
+              </span>
+              <span className="text-xs font-mono-code text-white/90 flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-[#FF5D22]" />
+                <span>
+                  {currentSeason.city}, {currentSeason.country}
+                </span>
+              </span>
+            </div>
+
+            <button
+              onClick={() => openEditTab('basics')}
+              className="px-3 py-1.5 bg-black/70 hover:bg-[#FF5D22] text-white hover:text-black border border-white/20 hover:border-[#FF5D22] text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 backdrop-blur-sm"
+            >
+              <Edit className="w-3.5 h-3.5" />
+              <span>Edit Season Header</span>
+            </button>
           </div>
 
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-black font-display uppercase tracking-tight text-white mb-4 drop-shadow">
@@ -244,7 +262,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
       <div className="max-w-7xl mx-auto px-6 sm:px-12 pt-16 space-y-16">
         {/* Section 1: Statistical Production Matrix */}
         <section className="bg-theme-panel border border-theme-subtle p-8 sm:p-10 shadow-sm">
-          <div className="flex items-center justify-between pb-6 mb-8 border-b border-theme-subtle">
+          <div className="flex flex-wrap items-center justify-between pb-6 mb-8 border-b border-theme-subtle gap-4">
             <div>
               <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block mb-1">
                 Analytical Performance
@@ -253,9 +271,19 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 Official Season Statistics
               </h2>
             </div>
-            <span className="text-xs font-mono-code text-theme-faint">
-              {currentSeason.stats.games} Games Played
-            </span>
+            
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono-code text-theme-faint hidden sm:inline">
+                {currentSeason.stats.games} Games Played
+              </span>
+              <button
+                onClick={() => openEditTab('stats')}
+                className="px-3 py-1.5 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black border border-theme-subtle text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <Edit className="w-3.5 h-3.5" />
+                <span>Edit Stats & Totals</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 mb-8">
@@ -317,71 +345,103 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center justify-between text-xs font-mono-code text-theme-muted pt-4 border-t border-theme-subtle gap-4">
-            <span>Total Points: {currentSeason.stats.totalPoints || '—'}</span>
-            <span>Total Assists: {currentSeason.stats.totalAssists || '—'}</span>
-            <span>Total Rebounds: {currentSeason.stats.totalRebounds || '—'}</span>
+            <span className="font-bold text-theme-main">Total Season Points: {currentSeason.stats.totalPoints !== undefined ? currentSeason.stats.totalPoints : Math.round(currentSeason.stats.pointsPerGame * currentSeason.stats.games)}</span>
+            <span>Total Season Assists: {currentSeason.stats.totalAssists !== undefined ? currentSeason.stats.totalAssists : Math.round(currentSeason.stats.assistsPerGame * currentSeason.stats.games)}</span>
+            <span>Total Season Rebounds: {currentSeason.stats.totalRebounds !== undefined ? currentSeason.stats.totalRebounds : Math.round(currentSeason.stats.reboundsPerGame * currentSeason.stats.games)}</span>
             <span>Minutes / Game: {currentSeason.stats.minutesPerGame || '31.0'}</span>
           </div>
         </section>
 
         {/* Section 2: Results, Trophies & Season Milestones */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-6 bg-theme-panel border border-theme-subtle p-8 shadow-sm">
-            <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block mb-2">
-              Silverware & Outcomes
-            </span>
-            <h3 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main mb-6">
-              Competition Results
-            </h3>
-
-            <div className="space-y-4">
-              {currentSeason.results.map((res, idx) => (
-                <div
-                  key={idx}
-                  className={`p-4 border ${
-                    res.stage === 'Champion'
-                      ? 'bg-[#FF5D22]/10 border-[#FF5D22]'
-                      : 'bg-theme-subtle border-theme-subtle'
-                  }`}
+          <div className="lg:col-span-6 bg-theme-panel border border-theme-subtle p-8 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block">
+                  Silverware & Outcomes
+                </span>
+                <button
+                  onClick={() => openEditTab('accolades')}
+                  className="p-1 text-theme-muted hover:text-[#FF5D22] text-xs font-mono-code uppercase flex items-center gap-1 cursor-pointer"
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-theme-main text-base font-display">
-                      {res.competition}
-                    </span>
-                    <span
-                      className={`text-xs font-mono-code font-bold uppercase px-2.5 py-0.5 rounded flex items-center gap-1.5 ${
-                        res.stage === 'Champion'
-                          ? 'bg-[#FF5D22] text-black'
-                          : 'bg-theme-panel text-theme-main border border-theme-subtle'
-                      }`}
-                    >
-                      {res.stage === 'Champion' && <Trophy className="w-3.5 h-3.5" />}
-                      <span>{res.stage}</span>
-                    </span>
+                  <Edit className="w-3.5 h-3.5" />
+                  <span>Edit Results</span>
+                </button>
+              </div>
+
+              <h3 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main mb-6">
+                Competition Results
+              </h3>
+
+              <div className="space-y-4">
+                {currentSeason.results.map((res, idx) => (
+                  <div
+                    key={idx}
+                    className={`p-4 border ${
+                      res.stage === 'Champion' || res.isTrophy
+                        ? 'bg-[#FF5D22]/10 border-[#FF5D22]'
+                        : 'bg-theme-subtle border-theme-subtle'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold text-theme-main text-base font-display">
+                        {res.competition}
+                      </span>
+                      <span
+                        className={`text-xs font-mono-code font-bold uppercase px-2.5 py-0.5 rounded flex items-center gap-1.5 ${
+                          res.stage === 'Champion' || res.isTrophy
+                            ? 'bg-[#FF5D22] text-black'
+                            : 'bg-theme-panel text-theme-main border border-theme-subtle'
+                        }`}
+                      >
+                        {(res.stage === 'Champion' || res.isTrophy) && <Trophy className="w-3.5 h-3.5" />}
+                        <span>{res.stage}</span>
+                      </span>
+                    </div>
+                    {res.description && (
+                      <p className="text-xs text-theme-muted font-sans-body">{res.description}</p>
+                    )}
                   </div>
-                  {res.description && (
-                    <p className="text-xs text-theme-muted font-sans-body">{res.description}</p>
-                  )}
-                </div>
-              ))}
+                ))}
+                {currentSeason.results.length === 0 && (
+                  <div className="text-xs font-mono-code text-theme-faint py-4 text-center">
+                    No tournament finishes logged for this season.
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="lg:col-span-6 bg-theme-panel border border-theme-subtle p-8 shadow-sm">
-            <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block mb-2">
-              Accolades
-            </span>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block">
+                Accolades
+              </span>
+              <button
+                onClick={() => openEditTab('accolades')}
+                className="p-1 text-theme-muted hover:text-[#FF5D22] text-xs font-mono-code uppercase flex items-center gap-1 cursor-pointer"
+              >
+                <Edit className="w-3.5 h-3.5" />
+                <span>Edit Accolades</span>
+              </button>
+            </div>
+
             <h3 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main mb-6">
               Honors & Career Highs
             </h3>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-3 mb-6">
               {currentSeason.achievements.map((ach, idx) => (
                 <div key={idx} className="flex items-center gap-3 p-3 bg-theme-subtle border border-theme-subtle">
                   <Award className="w-4 h-4 text-[#FF5D22] shrink-0" />
                   <span className="text-xs font-mono-code text-theme-main font-medium">{ach}</span>
                 </div>
               ))}
+              {currentSeason.achievements.length === 0 && (
+                <div className="text-xs font-mono-code text-theme-faint py-3 text-center">
+                  No individual honors logged for this season.
+                </div>
+              )}
             </div>
 
             {/* Single Game Season Highs */}
@@ -393,40 +453,40 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 <div className="p-2.5 bg-theme-subtle border border-theme-subtle">
                   <div className="text-[9px] text-theme-faint">PTS</div>
                   <div className="text-lg font-bold text-[#FF5D22]">
-                    {currentSeason.careerHighs.points?.value || '—'}
+                    {currentSeason.careerHighs?.points?.value || '—'}
                   </div>
                   <div className="text-[8px] text-theme-muted truncate">
-                    vs {currentSeason.careerHighs.points?.opponent}
+                    vs {currentSeason.careerHighs?.points?.opponent || 'Opponent'}
                   </div>
                 </div>
 
                 <div className="p-2.5 bg-theme-subtle border border-theme-subtle">
                   <div className="text-[9px] text-theme-faint">AST</div>
                   <div className="text-lg font-bold text-theme-main">
-                    {currentSeason.careerHighs.assists?.value || '—'}
+                    {currentSeason.careerHighs?.assists?.value || '—'}
                   </div>
                   <div className="text-[8px] text-theme-muted truncate">
-                    vs {currentSeason.careerHighs.assists?.opponent}
+                    vs {currentSeason.careerHighs?.assists?.opponent || 'Opponent'}
                   </div>
                 </div>
 
                 <div className="p-2.5 bg-theme-subtle border border-theme-subtle">
                   <div className="text-[9px] text-theme-faint">REB</div>
                   <div className="text-lg font-bold text-theme-main">
-                    {currentSeason.careerHighs.rebounds?.value || '—'}
+                    {currentSeason.careerHighs?.rebounds?.value || '—'}
                   </div>
                   <div className="text-[8px] text-theme-muted truncate">
-                    vs {currentSeason.careerHighs.rebounds?.opponent}
+                    vs {currentSeason.careerHighs?.rebounds?.opponent || 'Opponent'}
                   </div>
                 </div>
 
                 <div className="p-2.5 bg-theme-subtle border border-theme-subtle">
                   <div className="text-[9px] text-theme-faint">STL</div>
                   <div className="text-lg font-bold text-theme-main">
-                    {currentSeason.careerHighs.steals?.value || '—'}
+                    {currentSeason.careerHighs?.steals?.value || '—'}
                   </div>
                   <div className="text-[8px] text-theme-muted truncate">
-                    vs {currentSeason.careerHighs.steals?.opponent}
+                    vs {currentSeason.careerHighs?.steals?.opponent || 'Opponent'}
                   </div>
                 </div>
               </div>
@@ -436,16 +496,26 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
 
         {/* Section 3: "My Season" — Personal Reflections & Emotional Story */}
         <section className="bg-theme-panel border border-theme-subtle p-8 sm:p-12 shadow-sm">
-          <div className="max-w-3xl mb-8">
-            <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block mb-2">
-              Subjective Archive
-            </span>
-            <h3 className="text-3xl font-black font-display uppercase tracking-tight text-theme-main mb-4">
-              My Season Reflections
-            </h3>
-            <p className="font-serif-editorial text-xl italic text-theme-muted leading-relaxed">
-              "{currentSeason.narrative.summary}"
-            </p>
+          <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
+            <div className="max-w-3xl">
+              <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-[0.25em] block mb-2">
+                Subjective Archive
+              </span>
+              <h3 className="text-3xl font-black font-display uppercase tracking-tight text-theme-main mb-4">
+                My Season Reflections
+              </h3>
+              <p className="font-serif-editorial text-xl italic text-theme-muted leading-relaxed">
+                "{currentSeason.narrative.summary}"
+              </p>
+            </div>
+
+            <button
+              onClick={() => openEditTab('reflections')}
+              className="px-3 py-1.5 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black border border-theme-subtle text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <Edit className="w-3.5 h-3.5" />
+              <span>Edit Reflections</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-theme-subtle">
@@ -454,34 +524,34 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 Best Memory & Defining Triumph
               </span>
               <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
-                {currentSeason.narrative.bestMoment}
+                {currentSeason.narrative.bestMoment || 'No memory logged yet.'}
               </p>
             </div>
 
             <div className="p-6 bg-theme-subtle border border-theme-subtle space-y-3">
-              <span className="text-xs font-mono-code text-theme-faint uppercase tracking-wider font-bold block">
+              <span className="text-xs font-mono-code text-amber-500 uppercase tracking-wider font-bold block">
                 Hardest Obstacle Overcome
               </span>
               <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
-                {currentSeason.narrative.hardestChallenge}
+                {currentSeason.narrative.hardestChallenge || 'No obstacle logged yet.'}
               </p>
             </div>
 
             <div className="p-6 bg-theme-subtle border border-theme-subtle space-y-3">
-              <span className="text-xs font-mono-code text-theme-faint uppercase tracking-wider font-bold block">
+              <span className="text-xs font-mono-code text-emerald-400 uppercase tracking-wider font-bold block">
                 What I Learned (Tactical & Psychological)
               </span>
               <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
-                {currentSeason.narrative.whatILearned}
+                {currentSeason.narrative.whatILearned || 'No learning reflection logged yet.'}
               </p>
             </div>
 
             <div className="p-6 bg-theme-subtle border border-theme-subtle space-y-3">
-              <span className="text-xs font-mono-code text-theme-faint uppercase tracking-wider font-bold block">
+              <span className="text-xs font-mono-code text-blue-400 uppercase tracking-wider font-bold block">
                 Craft Improvements
               </span>
               <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
-                {currentSeason.narrative.whatIImproved}
+                {currentSeason.narrative.whatIImproved || 'No craft improvement logged yet.'}
               </p>
             </div>
           </div>
@@ -489,11 +559,21 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
 
         {/* Section 4: Teammates & Coaching Staff */}
         <section className="bg-theme-panel border border-theme-subtle p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <Users className="w-5 h-5 text-[#FF5D22]" />
-            <h3 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main">
-              The People of Season {currentSeason.id}
-            </h3>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Users className="w-5 h-5 text-[#FF5D22]" />
+              <h3 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main">
+                The People of Season {currentSeason.id}
+              </h3>
+            </div>
+
+            <button
+              onClick={() => openEditTab('people')}
+              className="px-3 py-1.5 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black border border-theme-subtle text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <Edit className="w-3.5 h-3.5" />
+              <span>Edit Staff & Teammates</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -510,6 +590,11 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 )}
               </div>
             ))}
+            {currentSeason.people.length === 0 && (
+              <div className="text-xs font-mono-code text-theme-faint col-span-3 py-4 text-center">
+                No teammates or coaching staff logged yet for this season.
+              </div>
+            )}
           </div>
         </section>
 
@@ -522,9 +607,19 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 Archival Photography & Moments
               </h3>
             </div>
-            <span className="text-xs font-mono-code text-theme-faint">
-              {currentSeason.gallery.length} Archival Assets
-            </span>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono-code text-theme-faint hidden sm:inline">
+                {currentSeason.gallery.length} Archival Assets
+              </span>
+              <button
+                onClick={() => openEditTab('gallery')}
+                className="px-3 py-1.5 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black border border-theme-subtle text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <Edit className="w-3.5 h-3.5" />
+                <span>Manage Photos</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -548,6 +643,11 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 </div>
               </div>
             ))}
+            {currentSeason.gallery.length === 0 && (
+              <div className="text-xs font-mono-code text-theme-faint col-span-3 py-8 text-center">
+                No archival photos added to this season yet. Click "Manage Photos" to upload or add presets.
+              </div>
+            )}
           </div>
         </section>
       </div>
@@ -573,11 +673,13 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
           </div>
         </div>
       )}
-      {/* Edit Season Modal */}
+
+      {/* Comprehensive Edit Season Modal */}
       {isEditModalOpen && currentSeason && (
         <EditSeasonModal
           season={currentSeason}
           isOpen={isEditModalOpen}
+          initialTab={editModalTab}
           onClose={() => setIsEditModalOpen(false)}
         />
       )}
