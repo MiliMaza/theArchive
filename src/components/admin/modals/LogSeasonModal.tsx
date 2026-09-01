@@ -45,7 +45,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
     status: 'In Progress' as SeasonStatus,
     isCurrentSeason: true,
     heroImage: PRESET_HERO_IMAGES[0].url,
-    
+
     // Stats
     games: 32,
     gamesStarted: 32,
@@ -67,7 +67,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
     trophyTitle: 'Turkish Presidential Cup Champions',
     trophyStage: 'Champion',
     achievementList: 'EuroLeague MVP Candidate, Turkish Cup Finalist, Presidential Cup MVP',
-    
+
     // Narrative
     tagline: 'Leading the charge in Istanbul: High-tempo precision in the EuroLeague crucible.',
     summary: 'A new European chapter defined by unrelenting defensive energy and masterclass pick-and-roll execution in Istanbul.',
@@ -218,44 +218,40 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
           <button
             type="button"
             onClick={() => setActiveStep('basics')}
-            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeStep === 'basics'
+            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${activeStep === 'basics'
                 ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
                 : 'border-transparent text-theme-muted hover:text-theme-main'
-            }`}
+              }`}
           >
             1. Team & Club Info
           </button>
           <button
             type="button"
             onClick={() => setActiveStep('stats')}
-            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeStep === 'stats'
+            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${activeStep === 'stats'
                 ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
                 : 'border-transparent text-theme-muted hover:text-theme-main'
-            }`}
+              }`}
           >
             2. Production & Splits
           </button>
           <button
             type="button"
             onClick={() => setActiveStep('narrative')}
-            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeStep === 'narrative'
+            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${activeStep === 'narrative'
                 ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
                 : 'border-transparent text-theme-muted hover:text-theme-main'
-            }`}
+              }`}
           >
             3. Narrative & Silverware
           </button>
           <button
             type="button"
             onClick={() => setActiveStep('media')}
-            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeStep === 'media'
+            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${activeStep === 'media'
                 ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
                 : 'border-transparent text-theme-muted hover:text-theme-main'
-            }`}
+              }`}
           >
             4. Photography & Visuals
           </button>
@@ -465,7 +461,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
           {activeStep === 'stats' && (
             <div className="space-y-6">
               <div className="p-4 bg-theme-subtle border border-theme-subtle text-xs font-mono-code text-theme-muted">
-                Official per-game and efficiency metrics for this campaign. These automatically aggregate into Maya's career totals and stats matrix.
+                Official per-game and efficiency metrics for this campaign. These automatically aggregate into career totals and stats matrix.
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -739,11 +735,10 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
                       key={idx}
                       type="button"
                       onClick={() => setFormData({ ...formData, heroImage: preset.url })}
-                      className={`p-2 border text-left flex flex-col gap-2 transition-all cursor-pointer ${
-                        formData.heroImage === preset.url
+                      className={`p-2 border text-left flex flex-col gap-2 transition-all cursor-pointer ${formData.heroImage === preset.url
                           ? 'border-[#FF5D22] bg-[#FF5D22]/10'
                           : 'border-theme-subtle bg-theme-subtle hover:border-theme-muted'
-                      }`}
+                        }`}
                     >
                       <img src={preset.url} alt={preset.label} className="w-full h-16 object-cover grayscale" />
                       <span className="text-[10px] font-mono-code text-theme-main truncate">{preset.label}</span>
