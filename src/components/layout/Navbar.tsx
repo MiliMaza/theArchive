@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Sparkles, Menu, X, Lock, Sun, Moon } from 'lucide-react';
+import { X, Lock, Sun, Moon } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -17,8 +17,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleAdmin,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme, isLight, toggleTheme } = useTheme();
-  const { playerProfile } = useCareer();
+  const { isLight, toggleTheme } = useTheme();
+  const { playerProfile, seasons } = useCareer();
 
   const navItems = [
     { id: 'home', label: 'Portfolio' },
@@ -51,12 +51,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`transition-all pb-1 cursor-pointer hover:text-theme-main relative focus:outline-none ${
-                isActive ? 'text-theme-main border-b-2 border-[#FF5D22]' : ''
-              }`}
+              className={`transition-all pb-1 cursor-pointer hover:text-theme-main relative focus:outline-none ${isActive && !isAdminOpen ? 'text-theme-main border-b-2 border-[#FF5D22]' : ''
+                }`}
             >
               {item.label}
-              {isActive && (
+              {isActive && !isAdminOpen && (
                 <span className="absolute -top-1 right-[-6px] w-1 h-1 rounded-full bg-[#FF5D22]" />
               )}
             </button>
@@ -70,11 +69,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           onClick={onToggleAdmin}
           title={isAdminOpen ? 'Close Private Vault' : 'Open Private Career Vault'}
-          className={`h-9 px-3.5 rounded-full flex items-center gap-2 text-xs font-mono-code tracking-wider uppercase transition-all cursor-pointer border ${
-            isAdminOpen
-              ? 'bg-[#FF5D22] text-black border-[#FF5D22] font-bold shadow-[0_0_20px_rgba(255,93,34,0.4)]'
-              : 'bg-theme-subtle hover:bg-theme-subtle/80 text-theme-main border-theme-subtle hover:border-theme-hover'
-          }`}
+          className={`h-9 px-3.5 rounded-full flex items-center gap-2 text-xs font-mono-code tracking-wider uppercase transition-all cursor-pointer border ${isAdminOpen
+            ? 'bg-[#FF5D22] text-black border-[#FF5D22] font-bold shadow-[0_0_20px_rgba(255,93,34,0.4)]'
+            : 'bg-theme-subtle hover:bg-theme-subtle/80 text-theme-main border-theme-subtle hover:border-theme-hover'
+            }`}
         >
           <Lock className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">{isAdminOpen ? 'Vault Active' : 'Vault'}</span>
@@ -127,18 +125,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onNavigate(item.id);
                 setMobileMenuOpen(false);
               }}
-              className={`text-left py-2.5 px-3 text-sm font-semibold tracking-[0.2em] uppercase transition-colors ${
-                currentView === item.id
-                  ? 'bg-theme-subtle text-[#FF5D22] border-l-2 border-[#FF5D22]'
-                  : 'text-theme-muted hover:text-theme-main'
-              }`}
+              className={`text-left py-2.5 px-3 text-sm font-semibold tracking-[0.2em] uppercase transition-colors ${currentView === item.id && !isAdminOpen
+                ? 'bg-theme-subtle text-[#FF5D22] border-l-2 border-[#FF5D22]'
+                : 'text-theme-muted hover:text-theme-main'
+                }`}
             >
               {item.label}
             </button>
           ))}
           <div className="pt-3 border-t border-theme-subtle flex items-center justify-between text-xs text-theme-faint font-mono-code">
-            <span>6 PRO SEASONS</span>
-            <span>4,192 CAREER PTS</span>
+            <span>{seasons.length} PRO SEASONS</span>
+            <span>{playerProfile.careerPoints} CAREER PTS</span>
           </div>
         </div>
       )}

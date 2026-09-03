@@ -48,9 +48,9 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
     overallCompleteness,
   } = useCareer();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'seasons' | 'documents' | 'notes'>('overview');
+  const [activeTab, setActiveTab] = useState<'configuration' | 'seasons' | 'documents' | 'notes'>('configuration');
   const [newNote, setNewNote] = useState('');
-  
+
   // Modals state
   const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
@@ -77,104 +77,58 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
     <div className="w-full bg-theme-canvas min-h-screen py-12 px-6 sm:px-12 text-theme-main border-t-2 border-[#FF5D22] transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Top Vault Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-theme-subtle">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-4 border-b border-theme-subtle">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#FF5D22] text-black flex items-center justify-center font-bold rounded shadow-[0_0_15px_rgba(255,93,34,0.3)]">
               <Lock className="w-5 h-5" />
             </div>
-            <div>
+            <div className='px-2'>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono-code bg-[#FF5D22]/20 text-[#FF5D22] px-2 py-0.5 font-bold uppercase tracking-widest border border-[#FF5D22]/30">
                   Private Career Vault
                 </span>
-                <span className="text-xs text-theme-faint font-mono-code">• {playerProfile.name} #{playerProfile.jerseyNumber} ({seasons.length} Seasons Logged)</span>
+                <span className="text-xs text-theme-faint font-mono-code">• {playerProfile.name} ({seasons.length} Seasons Logged)</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-tight text-theme-main mt-1">
-                Career Management & Archival Administration
+                Career Administration
               </h1>
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3 self-start sm:self-center">
-            <button
-              onClick={() => setIsSupabaseModalOpen(true)}
-              className="px-4 py-2 bg-[#3ECF8E]/20 hover:bg-[#3ECF8E] text-[#3ECF8E] hover:text-black text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 border border-[#3ECF8E]/40 shadow-sm"
-            >
-              <Database className="w-4 h-4" />
-              <span>Supabase Cloud Sync</span>
-            </button>
-
-            <button
-              onClick={() => setIsEditProfileOpen(true)}
-              className="px-4 py-2 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 border border-theme-subtle shadow-sm"
-            >
-              <User className="w-4 h-4" />
-              <span>Edit Athlete Profile</span>
-            </button>
-
-            <button
-              onClick={() => setIsLogSeasonOpen(true)}
-              className="px-4 py-2 bg-[#FF5D22] hover:bg-theme-main text-black hover:text-theme-canvas text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Log Season</span>
-            </button>
-
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-theme-subtle hover:bg-theme-main text-theme-main hover:text-theme-canvas text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border border-theme-subtle"
-            >
-              Exit Vault Mode
-            </button>
           </div>
         </div>
 
         {/* Vault Navigation Tabs */}
         <div className="flex flex-wrap gap-2 mb-8 border-b border-theme-subtle pb-4">
           <button
-            onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border ${
-              activeTab === 'overview'
-                ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
-                : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
-            }`}
+            onClick={() => setActiveTab('configuration')}
+            className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border ${activeTab === 'configuration'
+              ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
+              : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
+              }`}
           >
-            Career Completeness & Audits
+            Configuration
           </button>
           <button
             onClick={() => setActiveTab('seasons')}
-            className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border ${
-              activeTab === 'seasons'
-                ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
-                : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
-            }`}
+            className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border ${activeTab === 'seasons'
+              ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
+              : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
+              }`}
           >
-            Manage Seasons ({seasons.length})
+            Manage Seasons
           </button>
           <button
             onClick={() => setActiveTab('documents')}
-            className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border ${
-              activeTab === 'documents'
-                ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
-                : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
-            }`}
+            className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border ${activeTab === 'documents'
+              ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
+              : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
+              }`}
           >
-            Contracts & Paperwork ({documents.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('notes')}
-            className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border ${
-              activeTab === 'notes'
-                ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
-                : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
-            }`}
-          >
-            Private Reflections & Memos ({privateNotes.length})
+            Contracts & Paperwork
           </button>
         </div>
 
-        {/* TAB 1: OVERVIEW & COMPLETENESS GAUGE */}
-        {activeTab === 'overview' && (
+        {/* TAB 1: CONFIGURATION */}
+        {activeTab === 'configuration' && (
           <div className="space-y-10">
             {/* Athlete Profile Identity Card */}
             <div className="bg-theme-panel border border-theme-subtle p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
@@ -185,16 +139,12 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                     alt={playerProfile.name}
                     className="w-full h-full object-cover grayscale"
                   />
-                  <div className="absolute bottom-0 right-0 bg-[#FF5D22] text-black text-[9px] font-mono-code font-black px-1">
-                    #{playerProfile.jerseyNumber}
-                  </div>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest font-bold">
                       Active Athlete Profile
                     </span>
-                    <span className="text-xs text-theme-faint">• {playerProfile.role}</span>
                   </div>
                   <h3 className="text-xl font-bold font-display uppercase tracking-tight text-theme-main">
                     {playerProfile.name} {playerProfile.nickname ? `"${playerProfile.nickname}"` : ''}
@@ -210,7 +160,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                 className="px-4 py-2 bg-[#FF5D22] hover:bg-white text-black font-mono-code text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 flex-shrink-0"
               >
                 <User className="w-4 h-4" />
-                <span>Customize Real Data</span>
+                <span>Edit Profile</span>
               </button>
             </div>
 
@@ -218,13 +168,10 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
             <div className="bg-theme-panel border border-theme-subtle p-8 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest block">
-                  Vault Quick Actions (Interactive)
-                </span>
-                <span className="text-[10px] font-mono-code text-theme-faint">
-                  Click any action to open workflow
+                  Data Management
                 </span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => setIsSupabaseModalOpen(true)}
                   className="p-5 bg-[#3ECF8E]/10 hover:bg-[#3ECF8E] hover:text-black border border-[#3ECF8E]/30 text-left transition-all group cursor-pointer shadow-sm"
@@ -234,33 +181,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                     Supabase Cloud
                   </div>
                   <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
-                    Sync and persist your career data to PostgreSQL
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => setIsEditProfileOpen(true)}
-                  className="p-5 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black border border-theme-subtle text-left transition-all group cursor-pointer shadow-sm"
-                >
-                  <User className="w-6 h-6 text-[#FF5D22] group-hover:text-black mb-3" />
-                  <div className="text-xs font-bold font-mono-code uppercase text-theme-main group-hover:text-black">
-                    Edit Athlete Profile
-                  </div>
-                  <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
-                    Update personal name, bio, photo & physical specs
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => setIsLogSeasonOpen(true)}
-                  className="p-5 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black border border-theme-subtle text-left transition-all group cursor-pointer shadow-sm"
-                >
-                  <Plus className="w-6 h-6 text-[#FF5D22] group-hover:text-black mb-3" />
-                  <div className="text-xs font-bold font-mono-code uppercase text-theme-main group-hover:text-black">
-                    Log Future Season
-                  </div>
-                  <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
-                    Register Season {seasons.length + 1} with full stats & club data
+                    Sync and persist your data
                   </div>
                 </button>
 
@@ -273,133 +194,13 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                     Upload Media
                   </div>
                   <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
-                    Import match photography & arena captures
+                    Import photos & videos
                   </div>
                 </button>
 
-                <button
-                  onClick={() => setIsAttachDocOpen(true)}
-                  className="p-5 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black border border-theme-subtle text-left transition-all group cursor-pointer shadow-sm"
-                >
-                  <FileText className="w-6 h-6 text-[#FF5D22] group-hover:text-black mb-3" />
-                  <div className="text-xs font-bold font-mono-code uppercase text-theme-main group-hover:text-black">
-                    Attach Paperwork
-                  </div>
-                  <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
-                    Store confidential federation & salary documents
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => setIsDraftMemoryOpen(true)}
-                  className="p-5 bg-theme-subtle hover:bg-[#FF5D22] hover:text-black border border-theme-subtle text-left transition-all group cursor-pointer shadow-sm"
-                >
-                  <Sparkles className="w-6 h-6 text-[#FF5D22] group-hover:text-black mb-3" />
-                  <div className="text-xs font-bold font-mono-code uppercase text-theme-main group-hover:text-black">
-                    Draft Memory
-                  </div>
-                  <div className="text-[10px] text-theme-muted group-hover:text-black/80 mt-1">
-                    Write personal game anecdotes & reflections
-                  </div>
-                </button>
               </div>
             </div>
 
-            {/* Completeness Card */}
-            <div className="bg-theme-panel border border-theme-subtle p-8 shadow-sm">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
-                <div>
-                  <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest block mb-1">
-                    Archival Audit
-                  </span>
-                  <h2 className="text-3xl font-black font-display uppercase tracking-tight text-theme-main">
-                    Overall Career Completeness: {overallCompleteness}%
-                  </h2>
-                  <p className="text-xs text-theme-muted font-sans-body mt-1">
-                    All {seasons.length} campaigns structured with statistical records, photos, and narratives.
-                  </p>
-                </div>
-
-                <div className="w-full lg:w-72 bg-theme-subtle h-3 border border-theme-subtle relative overflow-hidden">
-                  <div
-                    style={{ width: `${overallCompleteness}%` }}
-                    className="bg-[#FF5D22] h-full transition-all duration-700"
-                  />
-                </div>
-              </div>
-
-              {/* Completeness Per Season Breakdown */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {seasons.map((s) => (
-                  <div key={s.id} className="p-5 bg-theme-subtle border border-theme-subtle space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono-code text-[#FF5D22] font-bold">
-                        Season {s.id} • {s.yearRange}
-                      </span>
-                      <span className="text-xs font-mono-code text-theme-main font-bold">
-                        {s.completenessScore}%
-                      </span>
-                    </div>
-
-                    <div className="text-sm font-bold text-theme-main font-display truncate">
-                      {s.team}
-                    </div>
-
-                    <div className="w-full bg-theme-panel h-1.5 overflow-hidden">
-                      <div
-                        style={{ width: `${s.completenessScore}%` }}
-                        className="bg-[#FF5D22] h-full"
-                      />
-                    </div>
-
-                    <div className="text-[10px] font-mono-code text-theme-faint flex items-center justify-between pt-1">
-                      <span>{s.stats.games} Games • {s.stats.pointsPerGame} PPG</span>
-                      <span className="text-emerald-500 font-bold">Verified</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Reset to Default Records Bar */}
-            <div className="p-6 bg-theme-panel border border-theme-subtle flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <div className="text-xs font-mono-code font-bold text-theme-main uppercase">
-                  Data Reset & Restoration
-                </div>
-                <div className="text-[10px] text-theme-faint font-mono-code mt-0.5">
-                  Restore original canonical six-season dataset if needed.
-                </div>
-              </div>
-
-              {showResetConfirm ? (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      resetToDefaults();
-                      setShowResetConfirm(false);
-                    }}
-                    className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-mono-code uppercase font-bold cursor-pointer transition-colors"
-                  >
-                    Confirm Reset
-                  </button>
-                  <button
-                    onClick={() => setShowResetConfirm(false)}
-                    className="px-3 py-1.5 bg-theme-subtle text-theme-muted text-xs font-mono-code uppercase cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setShowResetConfirm(true)}
-                  className="px-4 py-2 bg-theme-subtle hover:bg-theme-main text-theme-muted hover:text-theme-canvas text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border border-theme-subtle flex items-center gap-2"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset to Defaults</span>
-                </button>
-              )}
-            </div>
           </div>
         )}
 
@@ -409,7 +210,7 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main">
-                  Career Campaigns Directory ({seasons.length} Seasons)
+                  Career Campaigns Directory
                 </h2>
                 <p className="text-xs text-theme-muted font-sans-body mt-1">
                   Manage visibility, edit statistical splits, or log new campaigns.
@@ -452,11 +253,10 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleToggleVisibility(s)}
-                      className={`px-2.5 py-1 text-[11px] font-mono-code border flex items-center gap-1 transition-colors cursor-pointer ${
-                        s.isPublic
-                          ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/30'
-                          : 'text-amber-500 bg-amber-500/10 border-amber-500/30'
-                      }`}
+                      className={`px-2.5 py-1 text-[11px] font-mono-code border flex items-center gap-1 transition-colors cursor-pointer ${s.isPublic
+                        ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/30'
+                        : 'text-amber-500 bg-amber-500/10 border-amber-500/30'
+                        }`}
                       title="Toggle Public/Private status"
                     >
                       {s.isPublic ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
@@ -576,50 +376,6 @@ export const AdminVaultView: React.FC<AdminVaultViewProps> = ({ onClose, onSelec
                       </button>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* TAB 4: PRIVATE NOTES & REFLECTIONS */}
-        {activeTab === 'notes' && (
-          <div className="bg-theme-panel border border-theme-subtle p-8 space-y-6 shadow-sm">
-            <h2 className="text-2xl font-black font-display uppercase tracking-tight text-theme-main">
-              Private Athlete Logbook & Tactical Memos
-            </h2>
-
-            <form onSubmit={handleAddNote} className="space-y-3">
-              <textarea
-                value={newNote}
-                onChange={(e) => setNewNote(e.target.value)}
-                placeholder="Log a private memory, physical note, or tactical reminder..."
-                rows={3}
-                className="w-full bg-theme-subtle border border-theme-subtle p-4 text-xs font-mono-code text-theme-main placeholder:text-theme-faint focus:outline-none focus:border-[#FF5D22]"
-              />
-              <button
-                type="submit"
-                className="px-5 py-2.5 bg-[#FF5D22] text-black font-bold uppercase text-xs font-mono-code tracking-wider hover:bg-theme-main hover:text-theme-canvas transition-colors cursor-pointer flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Save Private Note</span>
-              </button>
-            </form>
-
-            <div className="space-y-3 pt-4 border-t border-theme-subtle">
-              {privateNotes.map((note, idx) => (
-                <div key={idx} className="p-4 bg-theme-subtle border border-theme-subtle flex items-start justify-between gap-3 group">
-                  <div className="flex items-start gap-3">
-                    <Lock className="w-3.5 h-3.5 text-[#FF5D22] shrink-0 mt-0.5" />
-                    <p className="text-xs font-mono-code text-theme-muted leading-relaxed">{note}</p>
-                  </div>
-                  <button
-                    onClick={() => deletePrivateNote(idx)}
-                    className="text-theme-faint hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1 cursor-pointer"
-                    title="Delete note"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
                 </div>
               ))}
             </div>

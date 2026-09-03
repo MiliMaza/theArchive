@@ -42,9 +42,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
           </div>
 
           <h1 className="text-6xl sm:text-7xl xl:text-[88px] 2xl:text-[96px] leading-[0.84] font-black tracking-tighter uppercase mb-6 mask-text font-display">
-            THE<br />
-            {getOrdinalWord(seasons.length)}<br />
-            CHAPTER.
+            {playerProfile.firstName + " " + playerProfile.lastName}
           </h1>
 
           <p className="font-serif-editorial text-lg sm:text-xl italic text-theme-muted leading-relaxed max-w-md">
@@ -58,7 +56,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
               <div className="text-[10px] uppercase tracking-[0.25em] text-theme-faint mb-1 font-mono-code">
                 Career Points
               </div>
-              <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-theme-main">
+              <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-[#FF5D22]">
                 {totalCareerPoints.toLocaleString()}
               </div>
             </div>
@@ -67,18 +65,17 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
               <div className="text-[10px] uppercase tracking-[0.25em] text-theme-faint mb-1 font-mono-code">
                 Assists Avg
               </div>
-              <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-[#FF5D22]">
+              <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-theme-main">
                 {avgAssists}
               </div>
             </div>
 
             <div>
               <div className="text-[10px] uppercase tracking-[0.25em] text-theme-faint mb-1 font-mono-code">
-                Championships
+                Seasons
               </div>
               <div className="text-3xl sm:text-4xl font-black font-display tracking-tight text-theme-main flex items-center gap-1.5">
-                <span>{championshipsCount || playerProfile.totalChampionships}</span>
-                <Trophy className="w-5 h-5 text-[#FF5D22] inline" />
+                <span>{seasons.length}</span>
               </div>
             </div>
           </div>
@@ -88,7 +85,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
               onClick={onExploreCareer}
               className="px-6 py-3 bg-theme-main text-theme-canvas font-bold uppercase tracking-wider text-xs flex items-center gap-2 hover:bg-[#FF5D22] hover:text-black transition-all cursor-pointer font-display shadow-md"
             >
-              <span>Explore Complete Journey</span>
+              <span>View Complete Journey</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -97,7 +94,7 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
                 onClick={() => onSelectSeason(activeSeason.id)}
                 className="px-5 py-3 border border-theme-subtle text-theme-muted hover:text-theme-main hover:border-theme-main text-xs font-mono-code tracking-wider uppercase transition-colors cursor-pointer"
               >
-                View Active Season ({activeSeason.id})
+                View Active Season
               </button>
             )}
           </div>
@@ -114,30 +111,26 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
             <div
               key={season.id}
               onClick={() => onSelectSeason(season.id)}
-              className={`p-7 sm:p-8 flex flex-col justify-between relative overflow-hidden transition-all duration-300 cursor-pointer group select-none border-b border-theme-subtle min-h-[190px] ${
-                !isRightCol ? 'sm:border-r border-theme-subtle' : ''
-              } ${
-                isCurrent
+              className={`p-7 sm:p-8 flex flex-col justify-between relative overflow-hidden transition-all duration-300 cursor-pointer group select-none border-b border-theme-subtle min-h-[190px] ${!isRightCol ? 'sm:border-r border-theme-subtle' : ''
+                } ${isCurrent
                   ? 'bg-[#FF5D22] text-black hover:bg-[#ff6e38]'
                   : 'bg-theme-canvas hover:bg-theme-panel text-theme-main'
-              }`}
+                }`}
             >
               <div className="z-10">
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span
-                    className={`text-[10px] font-mono-code font-semibold tracking-wider uppercase ${
-                      isCurrent ? 'text-black/70' : 'text-[#FF5D22]'
-                    }`}
+                    className={`text-[10px] font-mono-code font-semibold tracking-wider uppercase ${isCurrent ? 'text-black/70' : 'text-[#FF5D22]'
+                      }`}
                   >
                     {isCurrent ? 'Current Season • ' + season.yearRange : season.yearRange}
                   </span>
                   {season.results.some((r) => r.stage === 'Champion' || r.isTrophy) && (
                     <span
-                      className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                        isCurrent
-                          ? 'bg-black text-[#FF5D22]'
-                          : 'bg-[#FF5D22]/20 text-[#FF5D22]'
-                      }`}
+                      className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full flex items-center gap-1 ${isCurrent
+                        ? 'bg-black text-[#FF5D22]'
+                        : 'bg-[#FF5D22]/20 text-[#FF5D22]'
+                        }`}
                     >
                       <Trophy className="w-2.5 h-2.5" />
                       <span>Title</span>
@@ -146,17 +139,15 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
                 </div>
 
                 <h3
-                  className={`text-xl sm:text-2xl font-bold leading-tight font-display tracking-tight ${
-                    isCurrent ? 'text-black' : 'text-theme-main group-hover:text-[#FF5D22]'
-                  }`}
+                  className={`text-xl sm:text-2xl font-bold leading-tight font-display tracking-tight ${isCurrent ? 'text-black' : 'text-theme-main group-hover:text-[#FF5D22]'
+                    }`}
                 >
                   {season.team}
                 </h3>
 
                 <p
-                  className={`text-[11px] mt-2 uppercase tracking-widest font-sans-body ${
-                    isCurrent ? 'text-black/70' : 'text-theme-faint'
-                  }`}
+                  className={`text-[11px] mt-2 uppercase tracking-widest font-sans-body ${isCurrent ? 'text-black/70' : 'text-theme-faint'
+                    }`}
                 >
                   {season.league} • {season.country}
                 </p>
@@ -174,9 +165,8 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
 
               <div className="flex items-center justify-between mt-6 z-10">
                 <span
-                  className={`text-[10px] uppercase font-mono-code font-bold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity ${
-                    isCurrent ? 'text-black' : 'text-[#FF5D22]'
-                  }`}
+                  className={`text-[10px] uppercase font-mono-code font-bold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity ${isCurrent ? 'text-black' : 'text-[#FF5D22]'
+                    }`}
                 >
                   <span>Season Brief</span>
                   <ArrowRight className="w-3 h-3" />
@@ -184,11 +174,10 @@ export const ArtisticHeroGrid: React.FC<ArtisticHeroGridProps> = ({
 
                 {/* Huge Watermark Season Number */}
                 <span
-                  className={`season-num font-black font-display text-7xl sm:text-8xl leading-none absolute bottom-[-10px] right-2 transition-all duration-300 pointer-events-none select-none ${
-                    isCurrent
-                      ? '!text-black !opacity-15 group-hover:scale-105'
-                      : 'text-theme-main opacity-5 group-hover:text-[#FF5D22] group-hover:opacity-20 group-hover:scale-105'
-                  }`}
+                  className={`season-num font-black font-display text-7xl sm:text-8xl leading-none absolute bottom-[-10px] right-2 transition-all duration-300 pointer-events-none select-none ${isCurrent
+                    ? '!text-black !opacity-15 group-hover:scale-105'
+                    : 'text-theme-main opacity-5 group-hover:text-[#FF5D22] group-hover:opacity-20 group-hover:scale-105'
+                    }`}
                 >
                   {season.id}
                 </span>

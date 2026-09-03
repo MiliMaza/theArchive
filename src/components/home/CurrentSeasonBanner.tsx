@@ -24,7 +24,7 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
               <span>Active Campaign</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black font-display tracking-tight text-theme-main uppercase">
-              Season {currentSeason.id} Spotlight — {currentSeason.team}
+              Season {currentSeason.id}
             </h2>
           </div>
 
@@ -32,7 +32,7 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
             onClick={() => onSelectSeason(currentSeason.id)}
             className="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-[#FF5D22] hover:text-theme-main transition-colors cursor-pointer"
           >
-            <span>Open Complete Season File</span>
+            <span>Open Season File</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -85,11 +85,11 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
             </div>
           </div>
 
-          {/* Card Right: Statistical Engine & Shooting Splits */}
+          {/* Card Right: Statistical & Shooting Splits */}
           <div className="lg:col-span-7 bg-theme-panel border border-theme-subtle p-8 flex flex-col justify-between shadow-sm">
             <div>
               <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-[0.25em] mb-6 pb-3 border-b border-theme-subtle flex justify-between items-center">
-                <span>Official Production Splits</span>
+                <span>Official Stats</span>
                 <span className="text-[#FF5D22] font-bold">{currentSeason.stats.games} Games Logged</span>
               </div>
 
@@ -102,17 +102,17 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
                   <div className="text-3xl font-black font-display text-theme-main">
                     {currentSeason.stats.pointsPerGame}
                   </div>
-                  <div className="text-[10px] text-[#FF5D22] font-mono-code mt-1">#1 Team Scoring</div>
+                  <div className="text-[10px] text-[#FF5D22] font-mono-code mt-1">Points per game</div>
                 </div>
 
                 <div className="p-4 bg-theme-subtle border border-theme-subtle">
                   <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
                     APG
                   </div>
-                  <div className="text-3xl font-black font-display text-[#FF5D22]">
+                  <div className="text-3xl font-black font-display text-theme-main">
                     {currentSeason.stats.assistsPerGame}
                   </div>
-                  <div className="text-[10px] text-theme-muted font-mono-code mt-1">#1 League Assist</div>
+                  <div className="text-[10px] text-[#FF5D22] font-mono-code mt-1">Assists per game</div>
                 </div>
 
                 <div className="p-4 bg-theme-subtle border border-theme-subtle">
@@ -122,7 +122,7 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
                   <div className="text-3xl font-black font-display text-theme-main">
                     {currentSeason.stats.reboundsPerGame}
                   </div>
-                  <div className="text-[10px] text-theme-muted font-mono-code mt-1">Perimeter Glass</div>
+                  <div className="text-[10px] text-[#FF5D22] font-mono-code mt-1">Rebounds per game</div>
                 </div>
 
                 <div className="p-4 bg-theme-subtle border border-theme-subtle">
@@ -130,9 +130,9 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
                     SPG
                   </div>
                   <div className="text-3xl font-black font-display text-theme-main">
-                    {currentSeason.stats.stealsPerGame || 1.8}
+                    {currentSeason.stats.stealsPerGame}
                   </div>
-                  <div className="text-[10px] text-[#FF5D22] font-mono-code mt-1">Defensive Rating</div>
+                  <div className="text-[10px] text-[#FF5D22] font-mono-code mt-1">Steals per game</div>
                 </div>
               </div>
 
@@ -141,9 +141,9 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-bold uppercase tracking-wider font-display text-theme-main flex items-center gap-2">
                     <Flame className="w-4 h-4 text-[#FF5D22]" />
-                    <span>Shooting Accuracy Splits</span>
+                    <span>Shooting Accuracy</span>
                   </span>
-                  <span className="text-[10px] font-mono-code text-theme-faint">PER {currentSeason.stats.playerEfficiencyRating || 28.5}</span>
+                  <span className="text-[10px] font-mono-code text-theme-faint">IN {currentSeason.stats.games} GAMES</span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4 text-center">
@@ -157,7 +157,7 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
 
                   <div>
                     <div className="text-[10px] font-mono-code text-theme-faint mb-1">3-Point %</div>
-                    <div className="text-xl font-bold font-mono-code text-[#FF5D22]">{currentSeason.stats.threePointPct}%</div>
+                    <div className="text-xl font-bold font-mono-code text-theme-main">{currentSeason.stats.threePointPct}%</div>
                     <div className="w-full bg-theme-panel border border-theme-subtle h-1.5 mt-2 overflow-hidden">
                       <div className="bg-[#FF5D22] h-full" style={{ width: `${Math.min(100, currentSeason.stats.threePointPct)}%` }} />
                     </div>
@@ -176,7 +176,7 @@ export const CurrentSeasonBanner: React.FC<CurrentSeasonBannerProps> = ({ onSele
 
             <div className="pt-4 flex flex-wrap items-center justify-between gap-4 border-t border-theme-subtle">
               <div className="text-xs font-mono-code text-theme-muted">
-                Campaign ID: <span className="text-theme-main font-bold">Season {currentSeason.id} ({currentSeason.yearRange})</span>
+                <span className="text-theme-main font-bold">Season {currentSeason.id} ({currentSeason.yearRange})</span>
               </div>
 
               <button
