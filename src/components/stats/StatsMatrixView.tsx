@@ -224,60 +224,54 @@ export const StatsMatrixView: React.FC<StatsMatrixViewProps> = ({ onSelectSeason
             </h3>
           </div>
 
-          {/* TODO: Implement this dynamically */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-5 bg-theme-subtle border border-theme-subtle">
-              <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
-                Points Record
-              </div>
-              <div className="text-3xl font-black font-display text-[#FF5D22] mb-1">
-                41 PTS
-              </div>
-              <div className="text-xs text-theme-main font-bold">vs Melbourne United</div>
-              <div className="text-[10px] font-mono-code text-theme-faint mt-1">
-                Season 04 (2021/22) • 8/11 3PT
-              </div>
-            </div>
+          {(() => {
+            const statCategories = [
+              { key: 'points' as const, label: 'Points Record', suffix: 'PTS', isAccent: true },
+              { key: 'assists' as const, label: 'Assists Record', suffix: 'AST', isAccent: false },
+              { key: 'steals' as const, label: 'Steals Record', suffix: 'STL', isAccent: false },
+              { key: 'rebounds' as const, label: 'Rebounds Record', suffix: 'REB', isAccent: false },
+            ];
 
-            <div className="p-5 bg-theme-subtle border border-theme-subtle">
-              <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
-                Assists Record
-              </div>
-              <div className="text-3xl font-black font-display text-theme-main mb-1">
-                17 AST
-              </div>
-              <div className="text-xs text-theme-main font-bold">vs Chiba Jets</div>
-              <div className="text-[10px] font-mono-code text-theme-faint mt-1">
-                Season 06 (2023/24) • 0 Turnovers
-              </div>
-            </div>
+            const allTimeHighs = statCategories.map(({ key, label, suffix, isAccent }) => {
+              let best: { value: number; opponent: string; notes?: string; seasonId: string; yearRange: string } | null = null;
+              for (const season of seasons) {
+                const high = season.careerHighs[key];
+                if (high && (!best || high.value > best.value)) {
+                  best = {
+                    value: high.value,
+                    opponent: high.opponent,
+                    notes: high.notes,
+                    seasonId: season.id,
+                    yearRange: season.yearRange,
+                  };
+                }
+              }
+              return { key, label, suffix, isAccent, best };
+            });
 
-            <div className="p-5 bg-theme-subtle border border-theme-subtle">
-              <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
-                Steals Record
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {allTimeHighs.map(({ key, label, suffix, isAccent, best }) => (
+                  <div key={key} className="p-5 bg-theme-subtle border border-theme-subtle">
+                    <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
+                      {label}
+                    </div>
+                    <div className={`text-3xl font-black font-display mb-1 ${isAccent ? 'text-[#FF5D22]' : 'text-theme-main'}`}>
+                      {best ? `${best.value} ${suffix}` : `-- ${suffix}`}
+                    </div>
+                    {best && (
+                      <>
+                        <div className="text-xs text-theme-main font-bold">vs {best.opponent}</div>
+                        <div className="text-[10px] font-mono-code text-theme-faint mt-1">
+                          Season {best.seasonId} ({best.yearRange}){best.notes ? ` • ${best.notes}` : ''}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
               </div>
-              <div className="text-3xl font-black font-display text-theme-main mb-1">
-                7 STL
-              </div>
-              <div className="text-xs text-theme-main font-bold">vs Olympiacos BC</div>
-              <div className="text-[10px] font-mono-code text-theme-faint mt-1">
-                Season 03 (2020/21) • Athens Derby
-              </div>
-            </div>
-
-            <div className="p-5 bg-theme-subtle border border-theme-subtle">
-              <div className="text-[10px] font-mono-code text-theme-faint uppercase tracking-widest mb-1">
-                Rebounds Record
-              </div>
-              <div className="text-3xl font-black font-display text-theme-main mb-1">
-                11 REB
-              </div>
-              <div className="text-xs text-theme-main font-bold">vs FC Barcelona</div>
-              <div className="text-[10px] font-mono-code text-theme-faint mt-1">
-                Season 05 (2022/23) • Triple-Double
-              </div>
-            </div>
-          </div>
+            );
+          })()}
         </section>
       </div>
     </div>
