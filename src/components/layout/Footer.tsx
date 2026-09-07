@@ -1,6 +1,5 @@
 import React from 'react';
-import { ArrowUp, Lock, Globe, Instagram, Twitter, Mail, Award, Sun, Moon } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
+import { ArrowUp } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 
 interface FooterProps {
@@ -9,8 +8,7 @@ interface FooterProps {
   onSelectSeason: (seasonId: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelectSeason }) => {
-  const { theme, toggleTheme } = useTheme();
+export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectSeason }) => {
   const { seasons, playerProfile } = useCareer();
 
   const scrollToTop = () => {
@@ -33,24 +31,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelec
             <p className="font-serif-editorial text-xl italic text-theme-muted max-w-md leading-relaxed">
               "{playerProfile.tagline}"
             </p>
-            <div className="pt-4 flex items-center gap-3">
-              <button
-                onClick={onOpenVault}
-                className="flex items-center gap-2 px-4 py-2 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black border border-theme-subtle text-xs font-mono-code font-bold uppercase tracking-wider transition-colors cursor-pointer"
-              >
-                <Lock className="w-3.5 h-3.5" />
-                <span>Admin Vault & Audit</span>
-              </button>
-
-              <button
-                onClick={toggleTheme}
-                className="flex items-center gap-2 px-4 py-2 bg-theme-subtle hover:bg-theme-main text-theme-main hover:text-theme-canvas border border-theme-subtle text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer"
-                title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-              >
-                {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-indigo-500" />}
-                <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-              </button>
-            </div>
+            {/* TODO: Add instagram, X accounts */}
           </div>
 
           {/* Quick Navigation Links */}
@@ -64,7 +45,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelec
                   onClick={() => onNavigate('home')}
                   className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
                 >
-                  00 // Home Index
+                  00 // Home
                 </button>
               </li>
               <li>
@@ -72,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelec
                   onClick={() => onNavigate('career')}
                   className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
                 >
-                  01 // Career Timeline
+                  01 // Timeline
                 </button>
               </li>
               <li>
@@ -80,7 +61,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelec
                   onClick={() => onNavigate('memories')}
                   className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
                 >
-                  02 // Curated Memories
+                  02 // Memories
                 </button>
               </li>
               <li>
@@ -88,7 +69,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelec
                   onClick={() => onNavigate('stats')}
                   className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
                 >
-                  03 // Analytics Matrix
+                  03 // Analytics
                 </button>
               </li>
               <li>
@@ -96,7 +77,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelec
                   onClick={() => onNavigate('about')}
                   className="text-theme-muted hover:text-[#FF5D22] transition-colors cursor-pointer"
                 >
-                  04 // Profile & Philosophy
+                  04 // Profile
                 </button>
               </li>
             </ul>
@@ -132,7 +113,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVault, onNavigate, onSelec
           </div>
 
           <div className="flex items-center gap-6">
-            <span>FIBA / EuroLeague / B.League Certified</span>
             <button
               onClick={scrollToTop}
               className="flex items-center gap-1.5 text-theme-main hover:text-[#FF5D22] transition-colors cursor-pointer"

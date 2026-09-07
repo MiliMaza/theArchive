@@ -100,6 +100,7 @@ interface CareerContextType {
   updateSeason: (seasonId: string, updatedData: Partial<Season>) => void;
   deleteSeason: (seasonId: string) => void;
   addMemory: (memory: Memory) => void;
+  updateMemory: (memoryId: string, updatedData: Partial<Memory>) => void;
   deleteMemory: (memoryId: string) => void;
   addDocument: (doc: VaultDocument) => void;
   deleteDocument: (docId: string) => void;
@@ -450,6 +451,22 @@ export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
+  const updateMemory = (memoryId: string, updatedData: Partial<Memory>) => {
+    setMemories((prev) =>
+      prev.map((m) => {
+        if (m.id === memoryId) {
+          const updated = { ...m, ...updatedData };
+          const client = getSupabaseClient();
+          if (client) {
+            Promise.resolve(client.from('vault_memories').upsert({ id: updated.id, data: updated })).catch(console.warn);
+          }
+          return updated;
+        }
+        return m;
+      })
+    );
+  };
+
   const deleteMemory = (memoryId: string) => {
     setMemories((prev) => prev.filter((m) => m.id !== memoryId));
     const client = getSupabaseClient();
@@ -533,6 +550,7 @@ export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         updateSeason,
         deleteSeason,
         addMemory,
+        updateMemory,
         deleteMemory,
         addDocument,
         deleteDocument,

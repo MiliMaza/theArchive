@@ -45,7 +45,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
     status: 'In Progress' as SeasonStatus,
     isCurrentSeason: true,
     heroImage: PRESET_HERO_IMAGES[0].url,
-    
+
     // Stats
     games: 32,
     gamesStarted: 32,
@@ -67,7 +67,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
     trophyTitle: 'Turkish Presidential Cup Champions',
     trophyStage: 'Champion',
     achievementList: 'EuroLeague MVP Candidate, Turkish Cup Finalist, Presidential Cup MVP',
-    
+
     // Narrative
     tagline: 'Leading the charge in Istanbul: High-tempo precision in the EuroLeague crucible.',
     summary: 'A new European chapter defined by unrelenting defensive energy and masterclass pick-and-roll execution in Istanbul.',
@@ -218,46 +218,32 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
           <button
             type="button"
             onClick={() => setActiveStep('basics')}
-            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeStep === 'basics'
-                ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
-                : 'border-transparent text-theme-muted hover:text-theme-main'
-            }`}
+            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${activeStep === 'basics'
+              ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
+              : 'border-transparent text-theme-muted hover:text-theme-main'
+              }`}
           >
             1. Team & Club Info
           </button>
           <button
             type="button"
             onClick={() => setActiveStep('stats')}
-            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeStep === 'stats'
-                ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
-                : 'border-transparent text-theme-muted hover:text-theme-main'
-            }`}
+            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${activeStep === 'stats'
+              ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
+              : 'border-transparent text-theme-muted hover:text-theme-main'
+              }`}
           >
-            2. Production & Splits
+            2. Stats
           </button>
           <button
             type="button"
             onClick={() => setActiveStep('narrative')}
-            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeStep === 'narrative'
-                ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
-                : 'border-transparent text-theme-muted hover:text-theme-main'
-            }`}
+            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${activeStep === 'narrative'
+              ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
+              : 'border-transparent text-theme-muted hover:text-theme-main'
+              }`}
           >
             3. Narrative & Silverware
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveStep('media')}
-            className={`py-3 px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeStep === 'media'
-                ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
-                : 'border-transparent text-theme-muted hover:text-theme-main'
-            }`}
-          >
-            4. Photography & Visuals
           </button>
         </div>
 
@@ -464,10 +450,6 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
           {/* STEP 2: STATS */}
           {activeStep === 'stats' && (
             <div className="space-y-6">
-              <div className="p-4 bg-theme-subtle border border-theme-subtle text-xs font-mono-code text-theme-muted">
-                Official per-game and efficiency metrics for this campaign. These automatically aggregate into Maya's career totals and stats matrix.
-              </div>
-
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1.5">
@@ -496,7 +478,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-mono-code text-[#FF5D22] uppercase mb-1.5 font-bold">
+                  <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1.5">
                     Points / Game (PPG)
                   </label>
                   <input
@@ -510,7 +492,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-mono-code text-[#FF5D22] uppercase mb-1.5 font-bold">
+                  <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1.5">
                     Assists / Game (APG)
                   </label>
                   <input
@@ -578,10 +560,10 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
                 </div>
               </div>
 
-              {/* Shooting Splits */}
+              {/* Shooting Acc */}
               <div className="p-4 bg-theme-subtle border border-theme-subtle space-y-4">
                 <span className="text-[10px] font-mono-code text-[#FF5D22] uppercase tracking-widest block font-bold">
-                  Shooting Accuracy Splits (%)
+                  Shooting Accuracy (%)
                 </span>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
@@ -606,7 +588,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
                       step="0.1"
                       value={formData.threePointPct}
                       onChange={(e) => setFormData({ ...formData, threePointPct: Number(e.target.value) })}
-                      className="w-full bg-theme-panel border border-theme-subtle p-2.5 text-xs font-mono-code text-[#FF5D22] focus:border-[#FF5D22] focus:outline-none"
+                      className="w-full bg-theme-panel border border-theme-subtle p-2.5 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
                     />
                   </div>
 
@@ -660,7 +642,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-mono-code text-[#FF5D22] uppercase mb-1.5 font-bold">
-                    Best Memory & Defining Triumph
+                    Best Memory
                   </label>
                   <textarea
                     rows={2}
@@ -673,7 +655,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
 
                 <div>
                   <label className="block text-[10px] font-mono-code text-amber-500 uppercase mb-1.5 font-bold">
-                    Hardest Obstacle Overcome
+                    Hardest Obstacle
                   </label>
                   <textarea
                     rows={2}
@@ -688,7 +670,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-mono-code text-emerald-400 uppercase mb-1.5 font-bold">
-                    What I Learned (Tactical & Psychological)
+                    What I Learned
                   </label>
                   <textarea
                     rows={2}
@@ -701,7 +683,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
 
                 <div>
                   <label className="block text-[10px] font-mono-code text-blue-400 uppercase mb-1.5 font-bold">
-                    Craft Improvements
+                    Improvements
                   </label>
                   <textarea
                     rows={2}
@@ -729,7 +711,7 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
 
                 <div>
                   <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1.5">
-                    Accolades & Honors (Comma-separated)
+                    Accolades & Honors
                   </label>
                   <input
                     type="text"
@@ -769,11 +751,10 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
                       key={idx}
                       type="button"
                       onClick={() => setFormData({ ...formData, heroImage: preset.url })}
-                      className={`p-2 border text-left flex flex-col gap-2 transition-all cursor-pointer ${
-                        formData.heroImage === preset.url
-                          ? 'border-[#FF5D22] bg-[#FF5D22]/10'
-                          : 'border-theme-subtle bg-theme-subtle hover:border-theme-muted'
-                      }`}
+                      className={`p-2 border text-left flex flex-col gap-2 transition-all cursor-pointer ${formData.heroImage === preset.url
+                        ? 'border-[#FF5D22] bg-[#FF5D22]/10'
+                        : 'border-theme-subtle bg-theme-subtle hover:border-theme-muted'
+                        }`}
                     >
                       <img src={preset.url} alt={preset.label} className="w-full h-16 object-cover grayscale" />
                       <span className="text-[10px] font-mono-code text-theme-main truncate">{preset.label}</span>

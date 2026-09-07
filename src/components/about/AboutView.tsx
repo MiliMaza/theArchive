@@ -25,7 +25,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
             <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
               {playerProfile.name}
             </h1>
-            <p className="font-serif-editorial text-2xl italic text-theme-muted max-w-3xl leading-relaxed">
+            <p className="font-serif-editorial text-2xl italic text-theme-muted max-w-5xl leading-relaxed">
               "{playerProfile.tagline}"
             </p>
           </div>
@@ -35,7 +35,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
             className="px-5 py-2.5 bg-theme-subtle hover:bg-[#FF5D22] text-theme-main hover:text-black border border-theme-subtle text-xs font-mono-code font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 self-start md:self-auto shadow-sm"
           >
             <Edit className="w-4 h-4" />
-            <span>Edit Athlete Profile</span>
+            <span>Edit Profile</span>
           </button>
         </div>
 
@@ -93,11 +93,8 @@ export const AboutView: React.FC<AboutViewProps> = ({ onSelectSeason }) => {
           <div className="lg:col-span-7 space-y-10">
             <div className="space-y-6">
               <h2 className="text-3xl font-black font-display uppercase tracking-tight text-theme-main">
-                The Journey & Story
+                My Story
               </h2>
-              <p className="text-base text-theme-muted leading-relaxed font-sans-body">
-                {playerProfile.bioSummary}
-              </p>
               <div className="p-6 bg-theme-panel border-l-2 border-[#FF5D22] border-y border-r border-theme-subtle my-6 shadow-sm">
                 <p className="font-serif-editorial text-xl italic text-theme-muted leading-relaxed">
                   "{playerProfile.quote}"

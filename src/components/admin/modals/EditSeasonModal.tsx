@@ -381,11 +381,10 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`py-3 px-3 sm:px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                  activeTab === tab.id
-                    ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
-                    : 'border-transparent text-theme-muted hover:text-theme-main'
-                }`}
+                className={`py-3 px-3 sm:px-4 text-xs font-mono-code uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${activeTab === tab.id
+                  ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-panel'
+                  : 'border-transparent text-theme-muted hover:text-theme-main'
+                  }`}
               >
                 <Icon className="w-3.5 h-3.5" />
                 <span>{tab.label}</span>
@@ -425,17 +424,6 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
                   />
                 </div>
 
-                <div>
-                  <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1">
-                    Club Code (e.g. TOK, MAD)
-                  </label>
-                  <input
-                    type="text"
-                    value={clubCode}
-                    onChange={(e) => setClubCode(e.target.value.toUpperCase())}
-                    className="w-full bg-theme-subtle border border-theme-subtle p-2.5 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
-                  />
-                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -880,7 +868,7 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
                 <div>
                   <label className="block text-xs font-mono-code text-[#FF5D22] uppercase tracking-wider font-bold mb-1.5">
-                    Best Memory & Defining Triumph
+                    Best Memory
                   </label>
                   <textarea
                     rows={4}
@@ -893,7 +881,7 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-mono-code text-amber-500 uppercase tracking-wider font-bold mb-1.5">
-                    Hardest Obstacle Overcome
+                    Hardest Obstacle
                   </label>
                   <textarea
                     rows={4}
@@ -906,7 +894,7 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-mono-code text-emerald-400 uppercase tracking-wider font-bold mb-1.5">
-                    What I Learned (Tactical & Psychological)
+                    What I Learned
                   </label>
                   <textarea
                     rows={4}
@@ -919,7 +907,7 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-mono-code text-blue-400 uppercase tracking-wider font-bold mb-1.5">
-                    Craft Improvements
+                    Improvements
                   </label>
                   <textarea
                     rows={4}

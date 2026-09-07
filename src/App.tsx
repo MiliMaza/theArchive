@@ -116,7 +116,7 @@ function AppContent() {
                 {/* High Contrast Accolades Marquee Banner */}
                 <MarqueeBanner variant={isLight ? 'accent' : 'light'} />
 
-                {/* Current Season 06 Active Spotlight */}
+                {/* Current Season Active Spotlight */}
                 <CurrentSeasonBanner onSelectSeason={handleSelectSeason} />
 
                 {/* Featured Story & Emotional Archival Spotlight */}
@@ -151,7 +151,7 @@ function AppContent() {
               />
             )}
 
-            {/* VIEW: STATISTICS & ADVANCED ANALYTICS */}
+            {/* VIEW: STATISTICS & ANALYTICS */}
             {currentView === 'stats' && (
               <StatsMatrixView onSelectSeason={handleSelectSeason} />
             )}

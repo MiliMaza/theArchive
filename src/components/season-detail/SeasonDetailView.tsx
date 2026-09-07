@@ -148,11 +148,10 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 <button
                   key={s.id}
                   onClick={() => onSelectSeason(s.id)}
-                  className={`w-8 h-8 rounded text-xs font-mono-code font-bold transition-all cursor-pointer border ${
-                    s.id === currentSeason.id
-                      ? 'bg-[#FF5D22] text-black border-[#FF5D22] shadow-[0_0_12px_rgba(255,93,34,0.5)]'
-                      : 'bg-theme-subtle border-theme-subtle text-theme-muted hover:text-theme-main hover:border-theme-hover'
-                  }`}
+                  className={`w-8 h-8 rounded text-xs font-mono-code font-bold transition-all cursor-pointer border ${s.id === currentSeason.id
+                    ? 'bg-[#FF5D22] text-black border-[#FF5D22] shadow-[0_0_12px_rgba(255,93,34,0.5)]'
+                    : 'bg-theme-subtle border-theme-subtle text-theme-muted hover:text-theme-main hover:border-theme-hover'
+                    }`}
                 >
                   {s.id}
                 </button>
@@ -271,7 +270,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 Official Season Statistics
               </h2>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <span className="text-xs font-mono-code text-theme-faint hidden sm:inline">
                 {currentSeason.stats.games} Games Played
@@ -311,7 +310,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
             <div className="p-4 bg-theme-subtle border border-theme-subtle text-center">
               <div className="text-[10px] font-mono-code text-theme-faint uppercase mb-1">SPG</div>
               <div className="text-2xl font-black font-display text-theme-main">
-                {currentSeason.stats.stealsPerGame || '—'}
+                {currentSeason.stats.stealsPerGame}
               </div>
             </div>
 
@@ -339,7 +338,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
             <div className="p-4 bg-theme-subtle border border-theme-subtle text-center">
               <div className="text-[10px] font-mono-code text-theme-faint uppercase mb-1">PER</div>
               <div className="text-2xl font-black font-display text-[#FF5D22]">
-                {currentSeason.stats.playerEfficiencyRating || '26.0'}
+                {currentSeason.stats.playerEfficiencyRating}
               </div>
             </div>
           </div>
@@ -348,7 +347,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
             <span className="font-bold text-theme-main">Total Season Points: {currentSeason.stats.totalPoints !== undefined ? currentSeason.stats.totalPoints : Math.round(currentSeason.stats.pointsPerGame * currentSeason.stats.games)}</span>
             <span>Total Season Assists: {currentSeason.stats.totalAssists !== undefined ? currentSeason.stats.totalAssists : Math.round(currentSeason.stats.assistsPerGame * currentSeason.stats.games)}</span>
             <span>Total Season Rebounds: {currentSeason.stats.totalRebounds !== undefined ? currentSeason.stats.totalRebounds : Math.round(currentSeason.stats.reboundsPerGame * currentSeason.stats.games)}</span>
-            <span>Minutes / Game: {currentSeason.stats.minutesPerGame || '31.0'}</span>
+            <span>Minutes / Game: {currentSeason.stats.minutesPerGame}</span>
           </div>
         </section>
 
@@ -377,22 +376,20 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
                 {currentSeason.results.map((res, idx) => (
                   <div
                     key={idx}
-                    className={`p-4 border ${
-                      res.stage === 'Champion' || res.isTrophy
-                        ? 'bg-[#FF5D22]/10 border-[#FF5D22]'
-                        : 'bg-theme-subtle border-theme-subtle'
-                    }`}
+                    className={`p-4 border ${res.stage === 'Champion' || res.isTrophy
+                      ? 'bg-[#FF5D22]/10 border-[#FF5D22]'
+                      : 'bg-theme-subtle border-theme-subtle'
+                      }`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-bold text-theme-main text-base font-display">
                         {res.competition}
                       </span>
                       <span
-                        className={`text-xs font-mono-code font-bold uppercase px-2.5 py-0.5 rounded flex items-center gap-1.5 ${
-                          res.stage === 'Champion' || res.isTrophy
-                            ? 'bg-[#FF5D22] text-black'
-                            : 'bg-theme-panel text-theme-main border border-theme-subtle'
-                        }`}
+                        className={`text-xs font-mono-code font-bold uppercase px-2.5 py-0.5 rounded flex items-center gap-1.5 ${res.stage === 'Champion' || res.isTrophy
+                          ? 'bg-[#FF5D22] text-black'
+                          : 'bg-theme-panel text-theme-main border border-theme-subtle'
+                          }`}
                       >
                         {(res.stage === 'Champion' || res.isTrophy) && <Trophy className="w-3.5 h-3.5" />}
                         <span>{res.stage}</span>
@@ -521,7 +518,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-theme-subtle">
             <div className="p-6 bg-theme-subtle border border-theme-subtle space-y-3">
               <span className="text-xs font-mono-code text-[#FF5D22] uppercase tracking-wider font-bold block">
-                Best Memory & Defining Triumph
+                Best Memory
               </span>
               <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
                 {currentSeason.narrative.bestMoment || 'No memory logged yet.'}
@@ -530,7 +527,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
 
             <div className="p-6 bg-theme-subtle border border-theme-subtle space-y-3">
               <span className="text-xs font-mono-code text-amber-500 uppercase tracking-wider font-bold block">
-                Hardest Obstacle Overcome
+                Hardest Obstacle
               </span>
               <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
                 {currentSeason.narrative.hardestChallenge || 'No obstacle logged yet.'}
@@ -539,7 +536,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
 
             <div className="p-6 bg-theme-subtle border border-theme-subtle space-y-3">
               <span className="text-xs font-mono-code text-emerald-400 uppercase tracking-wider font-bold block">
-                What I Learned (Tactical & Psychological)
+                What I Learned
               </span>
               <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
                 {currentSeason.narrative.whatILearned || 'No learning reflection logged yet.'}
@@ -548,10 +545,10 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
 
             <div className="p-6 bg-theme-subtle border border-theme-subtle space-y-3">
               <span className="text-xs font-mono-code text-blue-400 uppercase tracking-wider font-bold block">
-                Craft Improvements
+                Improvements
               </span>
               <p className="text-sm text-theme-muted leading-relaxed font-sans-body">
-                {currentSeason.narrative.whatIImproved || 'No craft improvement logged yet.'}
+                {currentSeason.narrative.whatIImproved || 'No improvement logged yet.'}
               </p>
             </div>
           </div>
