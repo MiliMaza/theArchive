@@ -29,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <nav className="sticky top-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 border-b border-theme-subtle bg-theme-canvas/95 backdrop-blur-md transition-colors duration-300">
+    <nav className={`sticky top-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 border-b border-theme-subtle backdrop-blur-xl transition-colors duration-300 ${isLight ? 'bg-theme-canvas' : 'bg-theme-canvas/95'}`}>
       {/* Brand / Name */}
       <button
         onClick={() => onNavigate('home')}
