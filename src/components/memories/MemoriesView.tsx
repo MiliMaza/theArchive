@@ -39,14 +39,14 @@ export const MemoriesView: React.FC<MemoriesViewProps> = ({
         {/* Header */}
         <div className="mb-12 border-b border-theme-subtle pb-8">
           <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#FF5D22] tracking-[0.3em] uppercase mb-2">
-            <span>Subjective Archive</span>
+            <span>Subjective View</span>
             <span>•</span>
             <span>Personal Memories</span>
           </div>
           <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
-            Archives & Personal Stories
+            Personal Stories
           </h1>
-          <p className="font-serif-editorial text-xl italic text-theme-muted max-w-2xl leading-relaxed">
+          <p className="font-serif-editorial text-xl italic text-theme-muted max-w-3xl leading-relaxed">
             "A career is more than statistics. Teams, people, places, hard lessons, and personal memories tell the rest."
           </p>
         </div>
@@ -61,11 +61,10 @@ export const MemoriesView: React.FC<MemoriesViewProps> = ({
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 text-[11px] font-mono-code uppercase tracking-wider transition-all cursor-pointer border ${
-                selectedCategory === cat
-                  ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
-                  : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle hover:border-theme-hover'
-              }`}
+              className={`px-3 py-1.5 text-[11px] font-mono-code uppercase tracking-wider transition-all cursor-pointer border ${selectedCategory === cat
+                ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
+                : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle hover:border-theme-hover'
+                }`}
             >
               {cat}
             </button>

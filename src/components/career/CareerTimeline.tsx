@@ -74,10 +74,10 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
             <span>{seasons.length === 1 ? '1 Chapter' : `${getNumberWord(seasons.length)} Chapters`}</span>
           </div>
           <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-theme-main uppercase mb-4">
-            The {getNumberWord(seasons.length)}-Season Career
+            My Career
           </h1>
           <p className="font-serif-editorial text-xl italic text-theme-muted max-w-2xl">
-            Explore the tactical progression, international championships, and statistical milestones from {earliestYear} to the present.
+            Explore my progression, championships and stats from {earliestYear} to the present.
           </p>
         </div>
 
@@ -93,11 +93,10 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
               <button
                 key={c}
                 onClick={() => setSelectedCountry(c)}
-                className={`px-3 py-1.5 text-[11px] font-mono-code uppercase tracking-wider transition-all cursor-pointer border ${
-                  selectedCountry === c
-                    ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
-                    : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle hover:border-theme-hover'
-                }`}
+                className={`px-3 py-1.5 text-[11px] font-mono-code uppercase tracking-wider transition-all cursor-pointer border ${selectedCountry === c
+                  ? 'bg-[#FF5D22] text-black font-bold border-[#FF5D22]'
+                  : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle hover:border-theme-hover'
+                  }`}
               >
                 {c}
               </button>
@@ -105,14 +104,13 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
 
             <button
               onClick={() => setOnlyTrophies(!onlyTrophies)}
-              className={`px-3 py-1.5 text-[11px] font-mono-code uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 border ml-2 ${
-                onlyTrophies
-                  ? 'bg-amber-400 text-black font-bold border-amber-400'
-                  : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
-              }`}
+              className={`px-3 py-1.5 text-[11px] font-mono-code uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 border ml-2 ${onlyTrophies
+                ? 'bg-amber-400 text-black font-bold border-amber-400'
+                : 'bg-theme-subtle text-theme-muted hover:text-theme-main border-theme-subtle'
+                }`}
             >
               <Trophy className="w-3 h-3" />
-              <span>Champions Only</span>
+              <span>Titles Only</span>
             </button>
           </div>
 
@@ -120,11 +118,10 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
           <div className="flex items-center gap-1 bg-theme-subtle p-1 border border-theme-subtle">
             <button
               onClick={() => setViewMode('timeline')}
-              className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${
-                viewMode === 'timeline'
-                  ? 'bg-[#FF5D22] text-black font-bold'
-                  : 'text-theme-muted hover:text-theme-main'
-              }`}
+              className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${viewMode === 'timeline'
+                ? 'bg-[#FF5D22] text-black font-bold'
+                : 'text-theme-muted hover:text-theme-main'
+                }`}
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Timeline</span>
@@ -132,11 +129,10 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
 
             <button
               onClick={() => setViewMode('grid')}
-              className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${
-                viewMode === 'grid'
-                  ? 'bg-[#FF5D22] text-black font-bold'
-                  : 'text-theme-muted hover:text-theme-main'
-              }`}
+              className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${viewMode === 'grid'
+                ? 'bg-[#FF5D22] text-black font-bold'
+                : 'text-theme-muted hover:text-theme-main'
+                }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
               <span>Grid</span>
@@ -144,11 +140,10 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
 
             <button
               onClick={() => setViewMode('table')}
-              className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${
-                viewMode === 'table'
-                  ? 'bg-[#FF5D22] text-black font-bold'
-                  : 'text-theme-muted hover:text-theme-main'
-              }`}
+              className={`px-3 py-1.5 text-xs font-mono-code uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${viewMode === 'table'
+                ? 'bg-[#FF5D22] text-black font-bold'
+                : 'text-theme-muted hover:text-theme-main'
+                }`}
             >
               <TableIcon className="w-3.5 h-3.5" />
               <span>Stats Table</span>
@@ -166,11 +161,10 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
                 <div key={season.id} className="relative group">
                   {/* Timeline Node Point */}
                   <div
-                    className={`absolute -left-[31px] sm:-left-[55px] top-0 w-8 h-8 rounded-full border-2 flex items-center justify-center font-mono-code text-xs font-bold transition-all ${
-                      isCurrent
-                        ? 'bg-[#FF5D22] border-theme-main text-black shadow-[0_0_20px_rgba(255,93,34,0.6)]'
-                        : 'bg-theme-panel border-theme-subtle text-theme-main group-hover:border-[#FF5D22] group-hover:text-[#FF5D22]'
-                    }`}
+                    className={`absolute -left-[31px] sm:-left-[55px] top-0 w-8 h-8 rounded-full border-2 flex items-center justify-center font-mono-code text-xs font-bold transition-all ${isCurrent
+                      ? 'bg-[#FF5D22] border-theme-main text-black shadow-[0_0_20px_rgba(255,93,34,0.6)]'
+                      : 'bg-theme-panel border-theme-subtle text-theme-main group-hover:border-[#FF5D22] group-hover:text-[#FF5D22]'
+                      }`}
                   >
                     {season.id}
                   </div>
@@ -227,11 +221,10 @@ export const CareerTimeline: React.FC<CareerTimelineProps> = ({ onSelectSeason }
                             {season.results.map((res, rIdx) => (
                               <span
                                 key={rIdx}
-                                className={`text-xs px-3 py-1 font-mono-code flex items-center gap-1.5 border ${
-                                  res.stage === 'Champion'
-                                    ? 'bg-[#FF5D22]/10 border-[#FF5D22] text-[#FF5D22] font-bold'
-                                    : 'bg-theme-subtle border-theme-subtle text-theme-muted'
-                                }`}
+                                className={`text-xs px-3 py-1 font-mono-code flex items-center gap-1.5 border ${res.stage === 'Champion'
+                                  ? 'bg-[#FF5D22]/10 border-[#FF5D22] text-[#FF5D22] font-bold'
+                                  : 'bg-theme-subtle border-theme-subtle text-theme-muted'
+                                  }`}
                               >
                                 {res.stage === 'Champion' && <Trophy className="w-3 h-3 text-[#FF5D22]" />}
                                 <span>
