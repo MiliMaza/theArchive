@@ -14,6 +14,8 @@ import {
   Sparkles,
   Calculator,
   Flame,
+  Video,
+  Loader2,
 } from 'lucide-react';
 import {
   Season,
@@ -23,6 +25,8 @@ import {
   SeasonCareerHighs,
 } from '../../../types/career';
 import { useCareer } from '../../../context/CareerContext';
+import { uploadMediaFile, isMediaVideo } from '../../../lib/storage';
+import { MediaDropzone } from '../../common/MediaDropzone';
 
 interface EditSeasonModalProps {
   season: Season;
@@ -67,9 +71,11 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
   onSuccess,
   initialTab = 'basics',
 }) => {
-  const { updateSeason, deleteSeason } = useCareer();
+  const { updateSeason, deleteSeason, isSupabaseConnected } = useCareer();
 
   const [activeTab, setActiveTab] = useState<'basics' | 'stats' | 'reflections' | 'accolades' | 'people' | 'gallery'>(initialTab);
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen && initialTab) {
@@ -167,6 +173,7 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
   const [newImgSrc, setNewImgSrc] = useState('');
   const [newImgTag, setNewImgTag] = useState('Match Day');
   const [newImgCaption, setNewImgCaption] = useState('');
+  const [galleryNotice, setGalleryNotice] = useState<string | null>(null);
 
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -232,38 +239,82 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
     setPeople(people.filter((_, i) => i !== index));
   };
 
-  const handleAddGalleryImage = () => {
-    if (!newImgSrc.trim()) return;
-    setGallery([
-      ...gallery,
-      {
-        src: newImgSrc.trim(),
-        alt: `${team} photograph`,
-        caption: newImgCaption.trim() || `${team} match action.`,
-        tag: newImgTag,
-      },
-    ]);
+  const handleAddGalleryImage = (customSrc?: string, customCaption?: string) => {
+    const srcToUse = customSrc || newImgSrc;
+    if (!srcToUse.trim()) return;
+
+    let cleanSrc = srcToUse.trim();
+    // Auto-convert Google Drive links
+    const driveMatch = cleanSrc.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/);
+    if (driveMatch && driveMatch[1]) {
+      cleanSrc = `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
+    }
+
+    const newMedia: SeasonImage = {
+      src: cleanSrc,
+      alt: `${team} photograph`,
+      caption: (customCaption || newImgCaption).trim() || `${team} match action.`,
+      tag: newImgTag,
+      mediaType: isMediaVideo(cleanSrc) ? 'video' : 'image',
+    };
+
+    const updatedGallery = [newMedia, ...gallery];
+    setGallery(updatedGallery);
+    // Immediately persist to CareerContext & Supabase Cloud!
+    updateSeason(season.id, { gallery: updatedGallery });
+
+    setGalleryNotice(`Successfully saved media to Season ${season.id} gallery!`);
+    setTimeout(() => setGalleryNotice(null), 3500);
+
     setNewImgSrc('');
     setNewImgCaption('');
   };
 
   const handleRemoveGalleryImage = (index: number) => {
-    setGallery(gallery.filter((_, i) => i !== index));
+    const updatedGallery = gallery.filter((_, i) => i !== index);
+    setGallery(updatedGallery);
+    // Immediately persist to CareerContext & Supabase Cloud!
+    updateSeason(season.id, { gallery: updatedGallery });
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, isHero: boolean = false) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isHero: boolean = false) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
+    if (!file) return;
+
+    setUploadError(null);
+    setIsUploadingMedia(true);
+
+    try {
+      if (isSupabaseConnected) {
+        const result = await uploadMediaFile(file);
         if (isHero) {
-          setHeroImage(result);
+          setHeroImage(result.url);
         } else {
-          setNewImgSrc(result);
+          setNewImgSrc(result.url);
+          if (!newImgCaption) {
+            setNewImgCaption(file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '));
+          }
         }
-      };
-      reader.readAsDataURL(file);
+      } else {
+        const isVideo = file.type.startsWith('video/') || isMediaVideo(file.name);
+        if (isVideo) {
+          throw new Error('Supabase Cloud is required to upload and host MP4 video files. Please configure Supabase in Admin Vault.');
+        }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          if (isHero) {
+            setHeroImage(result);
+          } else {
+            setNewImgSrc(result);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (err: any) {
+      setUploadError(err.message || 'Upload failed');
+    } finally {
+      setIsUploadingMedia(false);
     }
   };
 
@@ -532,34 +583,14 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1">
-                  Hero Banner Photo URL
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={heroImage}
-                    onChange={(e) => setHeroImage(e.target.value)}
-                    className="flex-1 bg-theme-subtle border border-theme-subtle p-2.5 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
-                  />
-                  <label className="px-3 py-2 bg-theme-subtle hover:bg-theme-subtle/80 border border-theme-subtle text-xs font-mono-code text-theme-muted hover:text-theme-main cursor-pointer flex items-center gap-1.5 flex-shrink-0">
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>Upload</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileUpload(e, true)}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-                {heroImage && (
-                  <div className="mt-2 aspect-[21/9] max-h-36 overflow-hidden border border-theme-subtle bg-black">
-                    <img src={heroImage} alt="Hero Preview" className="w-full h-full object-cover grayscale" />
-                  </div>
-                )}
-              </div>
+              <MediaDropzone
+                value={heroImage}
+                onChange={(url) => setHeroImage(url)}
+                label="Season Hero Banner Image"
+                sublabel="Drop atmospheric arena or match photography (PNG, JPG, WEBP)"
+                aspectRatio="banner"
+                placeholder="Drop hero banner photo here or click to browse"
+              />
 
               <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-theme-subtle border border-theme-subtle">
                 <div className="flex items-center gap-2">
@@ -1274,39 +1305,51 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
             <div className="space-y-6">
               {/* Upload / Add Photo Box */}
               <div className="p-5 bg-theme-subtle border border-theme-subtle space-y-4">
-                <span className="text-xs font-mono-code text-[#FF5D22] uppercase tracking-wider font-bold block">
-                  Add Archival Photo to Season Gallery
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono-code text-[#FF5D22] uppercase tracking-wider font-bold block">
+                    Add Media (Photo or Video)
+                  </span>
+                  {isUploadingMedia && (
+                    <div className="flex items-center gap-1.5 text-xs font-mono-code text-[#FF5D22]">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Uploading...</span>
+                    </div>
+                  )}
+                </div>
+
+                {uploadError && (
+                  <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono-code">
+                    {uploadError}
+                  </div>
+                )}
+
+                <MediaDropzone
+                  value={newImgSrc}
+                  onChange={(url) => setNewImgSrc(url)}
+                  onFileUploaded={(res) => {
+                    if (!newImgCaption) {
+                      const cleanTitle = res.fileName.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+                      setNewImgCaption(cleanTitle);
+                    }
+                  }}
+                  label="Media Asset (Photo or Video)"
+                  sublabel="Drop photo or MP4 video here or click to browse (PNG, JPG, WEBP, MP4)"
+                  allowVideo={true}
+                  aspectRatio="landscape"
+                  placeholder="Drop gallery photo or MP4 video here or click to browse"
+                />
+
+                {galleryNotice && (
+                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono-code flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>{galleryNotice}</span>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="sm:col-span-2">
-                    <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1">
-                      Image URL or Upload *
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={newImgSrc}
-                        onChange={(e) => setNewImgSrc(e.target.value)}
-                        placeholder="https://images.unsplash.com/..."
-                        className="flex-1 bg-theme-panel border border-theme-subtle p-2 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
-                      />
-                      <label className="px-3 py-2 bg-theme-panel hover:bg-theme-subtle border border-theme-subtle text-xs font-mono-code text-theme-muted hover:text-theme-main cursor-pointer flex items-center gap-1 flex-shrink-0">
-                        <Upload className="w-3.5 h-3.5" />
-                        <span>Browse</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => handleFileUpload(e, false)}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                  </div>
-
                   <div>
                     <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1">
-                      Photo Tag
+                      Category Tag
                     </label>
                     <select
                       value={newImgTag}
@@ -1319,51 +1362,45 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
                       <option value="Training">Training</option>
                       <option value="Travel">Travel</option>
                       <option value="Arena">Arena</option>
-                      <option value="Highlights">Highlights</option>
+                      <option value="Highlights">Highlights & Video</option>
                     </select>
                   </div>
-                </div>
 
-                <div>
-                  <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1">
-                    Photo Caption
-                  </label>
-                  <input
-                    type="text"
-                    value={newImgCaption}
-                    onChange={(e) => setNewImgCaption(e.target.value)}
-                    placeholder="Brief description of the moment..."
-                    className="w-full bg-theme-panel border border-theme-subtle p-2 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
-                  />
+                  <div className="sm:col-span-2">
+                    <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1">
+                      Caption / Description
+                    </label>
+                    <input
+                      type="text"
+                      value={newImgCaption}
+                      onChange={(e) => setNewImgCaption(e.target.value)}
+                      placeholder="Brief description of the moment..."
+                      className="w-full bg-theme-panel border border-theme-subtle p-2 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono-code text-theme-faint">Presets:</span>
-                    {PRESET_PHOTO_TEMPLATES.map((tmpl, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => {
-                          setNewImgSrc(tmpl.src);
-                          setNewImgTag(tmpl.tag);
-                          setNewImgCaption(tmpl.caption);
-                        }}
-                        className="px-2 py-0.5 bg-theme-panel hover:bg-[#FF5D22] text-theme-muted hover:text-black text-[10px] font-mono-code border border-theme-subtle cursor-pointer"
-                      >
-                        {tmpl.tag}
-                      </button>
-                    ))}
-                  </div>
-
                   <button
                     type="button"
-                    onClick={handleAddGalleryImage}
-                    className="px-4 py-2 bg-[#FF5D22] hover:bg-white text-black font-mono-code text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5"
+                    onClick={() => handleAddGalleryImage()}
+                    disabled={!newImgSrc}
+                    className={`px-5 py-2.5 font-mono-code text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-md ${
+                      newImgSrc
+                        ? 'bg-[#FF5D22] hover:bg-white text-black ring-2 ring-[#FF5D22]'
+                        : 'bg-theme-subtle text-theme-muted border border-theme-subtle opacity-50 cursor-not-allowed'
+                    }`}
                   >
                     <Plus className="w-4 h-4" />
-                    <span>Add Photo to Gallery</span>
+                    <span>{newImgSrc ? 'Save to Season Gallery Now' : 'Add to Gallery'}</span>
                   </button>
+
+                  {newImgSrc && (
+                    <span className="text-xs font-mono-code text-emerald-400 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Uploaded — click button to save to season
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -1374,31 +1411,47 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
                 </span>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {gallery.map((img, idx) => (
-                    <div
-                      key={idx}
-                      className="group relative aspect-[4/3] bg-theme-subtle border border-theme-subtle overflow-hidden"
-                    >
-                      <img src={img.src} alt={img.alt} className="w-full h-full object-cover grayscale" />
-                      <div className="absolute top-2 left-2 bg-black/80 px-2 py-0.5 text-[9px] font-mono-code text-[#FF5D22] uppercase">
-                        {img.tag}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveGalleryImage(idx)}
-                        className="absolute top-2 right-2 bg-black/80 text-white hover:text-red-400 p-1 transition-colors cursor-pointer"
-                        title="Delete photo"
+                  {gallery.map((img, idx) => {
+                    const isVideo = isMediaVideo(img.src, img.mediaType);
+                    return (
+                      <div
+                        key={idx}
+                        className="group relative aspect-[4/3] bg-theme-subtle border border-theme-subtle overflow-hidden"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                      <div className="absolute bottom-0 inset-x-0 bg-black/85 p-2 text-[10px] text-white/90 font-mono-code truncate">
-                        {img.caption}
+                        {isVideo ? (
+                          <div className="relative w-full h-full bg-black flex items-center justify-center">
+                            <video src={img.src} className="w-full h-full object-cover grayscale opacity-80" />
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <div className="w-8 h-8 rounded-full bg-black/70 flex items-center justify-center text-[#FF5D22]">
+                                <Video className="w-4 h-4" />
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <img src={img.src} alt={img.alt} className="w-full h-full object-cover grayscale" />
+                        )}
+
+                        <div className="absolute top-2 left-2 bg-black/80 px-2 py-0.5 text-[9px] font-mono-code text-[#FF5D22] uppercase flex items-center gap-1">
+                          {isVideo && <Video className="w-2.5 h-2.5" />}
+                          <span>{img.tag}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveGalleryImage(idx)}
+                          className="absolute top-2 right-2 bg-black/80 text-white hover:text-red-400 p-1 transition-colors cursor-pointer z-10"
+                          title="Delete asset"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                        <div className="absolute bottom-0 inset-x-0 bg-black/85 p-2 text-[10px] text-white/90 font-mono-code truncate">
+                          {img.caption}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {gallery.length === 0 && (
                     <div className="text-xs font-mono-code text-theme-faint col-span-3 py-6 text-center">
-                      No photos added to this season yet. Add one above!
+                      No photos or videos added to this season yet. Add one above!
                     </div>
                   )}
                 </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, ImageIcon } from 'lucide-react';
 import { Memory } from '../../types/career';
 import { useCareer } from '../../context/CareerContext';
+import { MediaDropzone } from '../common/MediaDropzone';
 
 interface MemoryFormModalProps {
   existingMemory?: Memory | null;
@@ -224,35 +225,28 @@ export const MemoryFormModal: React.FC<MemoryFormModalProps> = ({
             />
           </div>
 
-          {/* Row: Image URL + Location */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className={labelClass}>
-                <span className="flex items-center gap-1.5">
-                  <ImageIcon className="w-3 h-3" />
-                  Image URL (optional)
-                </span>
-              </label>
-              <input
-                type="text"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className={inputClass}
-              />
-            </div>
-
-            <div>
-              <label className={labelClass}>Location (optional)</label>
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g. Palau Blaugrana, Barcelona"
-                className={inputClass}
-              />
-            </div>
+          {/* Location */}
+          <div>
+            <label className={labelClass}>Location (optional)</label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="e.g. Palau Blaugrana, Barcelona"
+              className={inputClass}
+            />
           </div>
+
+          {/* Media Dropzone */}
+          <MediaDropzone
+            value={image}
+            onChange={(url) => setImage(url)}
+            label="Memory Photography / Video Asset (optional)"
+            sublabel="Drop match photo or video clip (PNG, JPG, WEBP, MP4)"
+            allowVideo={true}
+            aspectRatio="landscape"
+            placeholder="Drop memory photo or video here or click to browse"
+          />
 
           {/* Toggles: Featured + Public */}
           <div className="flex items-center gap-8 pt-2">

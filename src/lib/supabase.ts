@@ -89,4 +89,32 @@ create policy "Public Access Seasons" on seasons for all using (true) with check
 create policy "Public Access Documents" on vault_documents for all using (true) with check (true);
 create policy "Public Access Notes" on vault_notes for all using (true) with check (true);
 create policy "Public Access Memories" on vault_memories for all using (true) with check (true);
+
+-- 6. Storage Bucket & Policies for Media (Photos & Videos)
+insert into storage.buckets (id, name, public)
+values ('media', 'media', true)
+on conflict (id) do update set public = true;
+
+-- Drop existing policies if already defined to prevent duplicate errors
+drop policy if exists "Public Media Access" on storage.objects;
+drop policy if exists "Public Media Insert" on storage.objects;
+drop policy if exists "Public Media Update" on storage.objects;
+drop policy if exists "Public Media Delete" on storage.objects;
+drop policy if exists "Allow Public Uploads" on storage.objects;
+drop policy if exists "Allow Public Select" on storage.objects;
+
+-- Allow public read/download
+create policy "Public Media Access" on storage.objects
+  for select to anon, authenticated using (bucket_id = 'media');
+
+-- Allow public upload
+create policy "Public Media Insert" on storage.objects
+  for insert to anon, authenticated with check (bucket_id = 'media');
+
+-- Allow public update & delete
+create policy "Public Media Update" on storage.objects
+  for update to anon, authenticated using (bucket_id = 'media');
+
+create policy "Public Media Delete" on storage.objects
+  for delete to anon, authenticated using (bucket_id = 'media');
 `;

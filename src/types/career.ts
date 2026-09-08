@@ -46,6 +46,7 @@ export interface SeasonImage {
   alt: string;
   caption?: string;
   tag?: string;
+  mediaType?: 'image' | 'video';
 }
 
 export interface Season {

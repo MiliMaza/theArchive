@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, User, Save, Sparkles, Image as ImageIcon, Award, Shield, FileText, CheckCircle } from 'lucide-react';
 import { useCareer } from '../../../context/CareerContext';
 import { PlayerProfile } from '../../../types/career';
+import { MediaDropzone } from '../../common/MediaDropzone';
 
 interface EditAthleteProfileModalProps {
   isOpen: boolean;
@@ -149,11 +150,10 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border-b-2 whitespace-nowrap ${
-                activeTab === tab.id
+              className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border-b-2 whitespace-nowrap ${activeTab === tab.id
                   ? 'border-[#FF5D22] text-[#FF5D22] font-bold'
                   : 'border-transparent text-theme-muted hover:text-theme-main'
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -325,30 +325,14 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-mono-code text-theme-muted uppercase tracking-wider mb-2 flex items-center justify-between">
-                  <span>Athlete Portrait Photo URL</span>
-                  <span className="text-[10px] text-theme-faint">Paste any direct image link</span>
-                </label>
-                <div className="flex gap-4 items-center">
-                  <input
-                    type="url"
-                    value={formData.profileImage || ''}
-                    onChange={(e) => handleChange('profileImage', e.target.value)}
-                    placeholder="https://images.unsplash.com/..."
-                    className="flex-1 bg-theme-subtle border border-theme-subtle px-4 py-2.5 text-xs font-mono-code text-theme-main focus:outline-none focus:border-[#FF5D22]"
-                  />
-                  {formData.profileImage && (
-                    <div className="w-12 h-12 bg-theme-subtle border border-theme-subtle overflow-hidden flex-shrink-0">
-                      <img
-                        src={formData.profileImage}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
+              <MediaDropzone
+                value={formData.profileImage || ''}
+                onChange={(url) => handleChange('profileImage', url)}
+                label="Athlete Portrait Photo (About & Bio)"
+                sublabel="Drop portrait photo or click to browse (PNG, JPG, WEBP)"
+                aspectRatio="portrait"
+                placeholder="Drop portrait photo here or click to browse"
+              />
             </div>
           )}
 
