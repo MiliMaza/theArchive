@@ -2,26 +2,21 @@ import React, { useState } from 'react';
 import {
   Trophy,
   MapPin,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
-  Flame,
   Users,
   Award,
-  Sparkles,
-  BookOpen,
   Image as ImageIcon,
-  Lock,
   Edit,
   Trash2,
-  AlertTriangle,
-  Activity,
-  Plus,
+  Play,
+  Video,
 } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
-import { Season } from '../../types/career';
 import { EditSeasonModal } from '../admin/modals/EditSeasonModal';
+import { isMediaVideo } from '../../lib/storage';
+import { useTheme } from '../../context/ThemeContext';
 
 interface SeasonDetailViewProps {
   seasonId: string;
@@ -36,6 +31,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
   onSelectSeason,
   isAdminMode = false,
 }) => {
+  const { isLight, toggleTheme } = useTheme();
   const { seasons, deleteSeason } = useCareer();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -77,7 +73,7 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
   return (
     <div className="w-full bg-theme-canvas min-h-screen pb-24 text-theme-main transition-colors duration-300">
       {/* Top Breadcrumb & Season Switcher Bar */}
-      <div className="border-b border-theme-subtle bg-theme-panel/95 backdrop-blur-md sticky top-20 z-40 px-6 sm:px-12 py-4 shadow-sm">
+      <div className={`border-b border-theme-subtle bg-theme-panel/95 backdrop-blur-md sticky top-20 z-40 px-6 sm:px-12 py-4 shadow-sm ${isLight ? 'bg-theme-canvas' : 'bg-theme-canvas/95'}`}>
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <button
@@ -620,29 +616,49 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {currentSeason.gallery.map((img, idx) => (
-              <div
-                key={idx}
-                onClick={() => setSelectedImage(img.src)}
-                className="group relative aspect-[4/3] bg-theme-panel border border-theme-subtle overflow-hidden cursor-pointer shadow-sm"
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-full object-cover grayscale contrast-125 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
-                <div className="absolute top-3 left-3 bg-black/80 px-2 py-0.5 text-[9px] font-mono-code text-[#FF5D22] uppercase border border-white/10">
-                  {img.tag}
+            {currentSeason.gallery.map((img, idx) => {
+              const isVideo = isMediaVideo(img.src, img.mediaType);
+              return (
+                <div
+                  key={idx}
+                  onClick={() => setSelectedImage(img.src)}
+                  className="group relative aspect-[4/3] bg-theme-panel border border-theme-subtle overflow-hidden cursor-pointer shadow-sm"
+                >
+                  {isVideo ? (
+                    <div className="relative w-full h-full bg-black flex items-center justify-center">
+                      <video
+                        src={img.src}
+                        preload="metadata"
+                        className="w-full h-full object-cover grayscale contrast-125 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-500 opacity-90"
+                      />
+                      {/* Play button overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-colors">
+                        <div className="w-12 h-12 rounded-full bg-black/70 border border-white/20 flex items-center justify-center text-[#FF5D22] group-hover:scale-110 group-hover:bg-[#FF5D22] group-hover:text-black transition-all shadow-lg">
+                          <Play className="w-5 h-5 fill-current ml-0.5" />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      className="w-full h-full object-cover grayscale contrast-125 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-500"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 pointer-events-none" />
+                  <div className="absolute top-3 left-3 bg-black/80 px-2 py-0.5 text-[9px] font-mono-code text-[#FF5D22] uppercase border border-white/10 flex items-center gap-1">
+                    {isVideo && <Video className="w-3 h-3" />}
+                    <span>{img.tag}</span>
+                  </div>
+                  <div className="absolute bottom-3 left-3 right-3 text-xs text-white/90 font-sans-body pointer-events-none">
+                    {img.caption}
+                  </div>
                 </div>
-                <div className="absolute bottom-3 left-3 right-3 text-xs text-white/90 font-sans-body">
-                  {img.caption}
-                </div>
-              </div>
-            ))}
+              );
+            })}
             {currentSeason.gallery.length === 0 && (
               <div className="text-xs font-mono-code text-theme-faint col-span-3 py-8 text-center">
-                No archival photos added to this season yet. Click "Manage Photos" to upload or add presets.
+                No archival photos or videos added to this season yet. Click "Manage Photos" to upload files or add presets.
               </div>
             )}
           </div>
@@ -655,15 +671,24 @@ export const SeasonDetailView: React.FC<SeasonDetailViewProps> = ({
           onClick={() => setSelectedImage(null)}
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-6 cursor-pointer"
         >
-          <div className="max-w-4xl max-h-[85vh] relative" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={selectedImage}
-              alt="Archival capture full"
-              className="max-w-full max-h-[80vh] object-contain border border-white/20"
-            />
+          <div className="max-w-4xl max-h-[85vh] relative w-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            {isMediaVideo(selectedImage) ? (
+              <video
+                src={selectedImage}
+                controls
+                autoPlay
+                className="max-w-full max-h-[80vh] rounded border border-white/20 shadow-2xl bg-black"
+              />
+            ) : (
+              <img
+                src={selectedImage}
+                alt="Archival capture full"
+                className="max-w-full max-h-[80vh] object-contain border border-white/20 shadow-2xl"
+              />
+            )}
             <button
               onClick={() => setSelectedImage(null)}
-              className="absolute -top-12 right-0 text-white hover:text-[#FF5D22] font-mono-code text-xs uppercase"
+              className="absolute -top-12 right-0 text-white hover:text-[#FF5D22] font-mono-code text-xs uppercase cursor-pointer"
             >
               [Close Esc]
             </button>

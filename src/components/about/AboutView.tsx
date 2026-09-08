@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trophy, Shield, MapPin, Globe, Sparkles, Activity, FileText, ArrowRight, User, Edit } from 'lucide-react';
+import { ArrowRight, Edit } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 import { EditAthleteProfileModal } from '../admin/modals/EditAthleteProfileModal';
 

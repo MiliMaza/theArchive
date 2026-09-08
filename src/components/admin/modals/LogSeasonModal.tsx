@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Plus, Sparkles, CheckCircle2, Trophy, Image, Activity } from 'lucide-react';
+import { X, CheckCircle2 } from 'lucide-react';
 import { Season, SeasonStatus } from '../../../types/career';
 import { useCareer } from '../../../context/CareerContext';
+import { MediaDropzone } from '../../common/MediaDropzone';
 
 interface LogSeasonModalProps {
   isOpen: boolean;
@@ -728,44 +729,21 @@ export const LogSeasonModal: React.FC<LogSeasonModalProps> = ({ isOpen, onClose,
           {/* STEP 4: MEDIA */}
           {activeStep === 'media' && (
             <div className="space-y-6">
-              <div>
-                <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1.5">
-                  Hero Image URL
-                </label>
-                <input
-                  type="text"
-                  value={formData.heroImage}
-                  onChange={(e) => setFormData({ ...formData, heroImage: e.target.value })}
-                  className="w-full bg-theme-subtle border border-theme-subtle p-3 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
-                  required
-                />
-              </div>
+              <MediaDropzone
+                value={formData.heroImage}
+                onChange={(url) => setFormData({ ...formData, heroImage: url })}
+                label="Season Hero Banner Image"
+                sublabel="Drop atmospheric arena or match photography (PNG, JPG, WEBP)"
+                aspectRatio="banner"
+                placeholder="Drop hero banner photo here or click to browse"
+                presets={PRESET_HERO_IMAGES.map((p) => ({ src: p.url, label: p.label }))}
+              />
 
-              <div>
-                <span className="block text-[10px] font-mono-code text-theme-faint uppercase mb-2">
-                  Or Pick Curated High-Res Atmosphere Presets:
-                </span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {PRESET_HERO_IMAGES.map((preset, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, heroImage: preset.url })}
-                      className={`p-2 border text-left flex flex-col gap-2 transition-all cursor-pointer ${formData.heroImage === preset.url
-                        ? 'border-[#FF5D22] bg-[#FF5D22]/10'
-                        : 'border-theme-subtle bg-theme-subtle hover:border-theme-muted'
-                        }`}
-                    >
-                      <img src={preset.url} alt={preset.label} className="w-full h-16 object-cover grayscale" />
-                      <span className="text-[10px] font-mono-code text-theme-main truncate">{preset.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Preview Box */}
+              {/* Campaign Summary Badge */}
               <div className="p-4 bg-theme-subtle border border-theme-subtle flex items-center gap-4">
-                <img src={formData.heroImage} alt="Preview" className="w-20 h-20 object-cover border border-theme-subtle" />
+                {formData.heroImage && (
+                  <img src={formData.heroImage} alt="Preview" className="w-16 h-16 object-cover border border-theme-subtle flex-shrink-0" />
+                )}
                 <div className="space-y-1">
                   <div className="text-xs font-mono-code font-bold text-theme-main uppercase">
                     Season {formData.id} • {formData.team}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Sparkles, CheckCircle2, BookOpen, Quote, Image } from 'lucide-react';
+import { X, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useCareer } from '../../../context/CareerContext';
 import { Memory } from '../../../types/career';
+import { MediaDropzone } from '../../common/MediaDropzone';
 
 interface DraftMemoryModalProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ export const DraftMemoryModal: React.FC<DraftMemoryModalProps> = ({ isOpen, onCl
   const [excerpt, setExcerpt] = useState('');
   const [fullStory, setFullStory] = useState('');
   const [quote, setQuote] = useState('');
-  const [image, setImage] = useState('https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=900&auto=format&fit=crop');
+  const [image, setImage] = useState('');
   const [featured, setFeatured] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -199,20 +200,18 @@ export const DraftMemoryModal: React.FC<DraftMemoryModalProps> = ({ isOpen, onCl
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[10px] font-mono-code text-theme-faint uppercase mb-1.5">
-                Photo URL
-              </label>
-              <input
-                type="text"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                className="w-full bg-theme-subtle border border-theme-subtle p-3 text-xs font-mono-code text-theme-main focus:border-[#FF5D22] focus:outline-none"
-              />
-            </div>
+          <div className="space-y-4">
+            <MediaDropzone
+              value={image}
+              onChange={(url) => setImage(url)}
+              label="Memory Photography / Video Asset"
+              sublabel="Drop match photography or MP4 clip (PNG, JPG, WEBP, MP4)"
+              allowVideo={true}
+              aspectRatio="landscape"
+              placeholder="Drop memory photo or video here or click to browse"
+            />
 
-            <div className="flex items-center gap-2 p-3 bg-theme-subtle border border-theme-subtle self-end">
+            <div className="flex items-center gap-2 p-3 bg-theme-subtle border border-theme-subtle">
               <input
                 type="checkbox"
                 id="isFeaturedStory"
@@ -221,7 +220,7 @@ export const DraftMemoryModal: React.FC<DraftMemoryModalProps> = ({ isOpen, onCl
                 className="accent-[#FF5D22] w-4 h-4 cursor-pointer"
               />
               <label htmlFor="isFeaturedStory" className="text-xs font-mono-code text-theme-main cursor-pointer">
-                Feature on Home Page Banner
+                Feature on Home Page Banner (Spotlight Memory)
               </label>
             </div>
           </div>

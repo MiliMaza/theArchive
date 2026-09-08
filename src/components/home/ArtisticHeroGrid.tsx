@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Trophy, Sparkles, MapPin } from 'lucide-react';
+import { ArrowRight, Trophy } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 
 interface ArtisticHeroGridProps {

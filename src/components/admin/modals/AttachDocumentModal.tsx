@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, FileText, CheckCircle2, Lock, Upload, Shield } from 'lucide-react';
+import { X, FileText, CheckCircle2, Lock, Upload } from 'lucide-react';
 import { useCareer, VaultDocument } from '../../../context/CareerContext';
 
 interface AttachDocumentModalProps {

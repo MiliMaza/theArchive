@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Database, CheckCircle, Copy, AlertCircle, ExternalLink, RefreshCw, Key, ShieldCheck } from 'lucide-react';
-import { supabase, isSupabaseConfigured, SUPABASE_SQL_SCHEMA } from '../../../lib/supabase';
+import { SUPABASE_SQL_SCHEMA } from '../../../lib/supabase';
 import { useCareer } from '../../../context/CareerContext';
 
 interface SupabaseSyncModalProps {
@@ -84,11 +84,10 @@ export const SupabaseSyncModal: React.FC<SupabaseSyncModalProps> = ({ isOpen, on
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border-b-2 whitespace-nowrap ${
-                activeTab === tab.id
+              className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border-b-2 whitespace-nowrap ${activeTab === tab.id
                   ? 'border-[#3ECF8E] text-[#3ECF8E] font-bold'
                   : 'border-transparent text-theme-muted hover:text-theme-main'
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -102,11 +101,10 @@ export const SupabaseSyncModal: React.FC<SupabaseSyncModalProps> = ({ isOpen, on
             <div className="space-y-6">
               {/* Connection Status Banner */}
               <div
-                className={`p-5 border flex items-start justify-between gap-4 ${
-                  isSupabaseConnected
+                className={`p-5 border flex items-start justify-between gap-4 ${isSupabaseConnected
                     ? 'bg-[#3ECF8E]/10 border-[#3ECF8E]/40 text-[#3ECF8E]'
                     : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                }`}
+                  }`}
               >
                 <div className="flex items-start gap-3">
                   {isSupabaseConnected ? (

@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import {
   Trophy,
   MapPin,
-  Calendar,
   ArrowRight,
   Filter,
   Layers,
   LayoutGrid,
   Table as TableIcon,
-  Sparkles,
-  ChevronRight,
-  Flame,
+  ChevronRight
 } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 import { Season } from '../../types/career';

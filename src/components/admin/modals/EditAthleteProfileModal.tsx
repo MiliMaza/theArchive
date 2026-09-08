@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, User, Save, Sparkles, Image as ImageIcon, Award, Shield, FileText, CheckCircle } from 'lucide-react';
+import { X, User, Save, CheckCircle } from 'lucide-react';
 import { useCareer } from '../../../context/CareerContext';
 import { PlayerProfile } from '../../../types/career';
+import { MediaDropzone } from '../../common/MediaDropzone';
 
 interface EditAthleteProfileModalProps {
   isOpen: boolean;
@@ -113,7 +114,7 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
       <div className="bg-theme-panel border border-theme-subtle w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl transition-colors duration-300">
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-6 border-b border-theme-subtle bg-theme-subtle/30">
+        <div className="flex items-center justify-between p-6 border-b border-theme-subtle bg-theme-subtle/30 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-[#FF5D22] text-black flex items-center justify-center font-bold">
               <User className="w-5 h-5" />
@@ -139,7 +140,7 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex border-b border-theme-subtle px-6 pt-3 gap-2 bg-theme-panel overflow-x-auto">
+        <div className="flex border-b border-theme-subtle px-6 gap-2 bg-theme-panel overflow-x-auto shrink-0">
           {[
             { id: 'general', label: '1. Identity & Club' },
             { id: 'physical', label: '2. Physical Blueprint' },
@@ -149,11 +150,10 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border-b-2 whitespace-nowrap ${
-                activeTab === tab.id
-                  ? 'border-[#FF5D22] text-[#FF5D22] font-bold'
-                  : 'border-transparent text-theme-muted hover:text-theme-main'
-              }`}
+              className={`px-4 py-3 text-xs font-mono-code uppercase tracking-wider transition-all cursor-pointer border-b-2 whitespace-nowrap -mb-px ${activeTab === tab.id
+                ? 'border-[#FF5D22] text-[#FF5D22] font-bold bg-theme-subtle/30'
+                : 'border-transparent text-theme-muted hover:text-theme-main hover:bg-theme-subtle/20'
+                }`}
             >
               {tab.label}
             </button>
@@ -161,10 +161,10 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
         </div>
 
         {/* Modal Form Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="flex-1 min-h-0 overflow-y-auto p-6 space-y-6">
           {/* TAB 1: IDENTITY & CLUB */}
           {activeTab === 'general' && (
-            <div className="space-y-6 animate-fadeIn">
+            <div className="space-y-6 animate-fadeIn pt-1">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label className="block text-xs font-mono-code text-theme-muted uppercase tracking-wider mb-2">
@@ -325,40 +325,20 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-mono-code text-theme-muted uppercase tracking-wider mb-2 flex items-center justify-between">
-                  <span>Athlete Portrait Photo URL</span>
-                  <span className="text-[10px] text-theme-faint">Paste any direct image link</span>
-                </label>
-                <div className="flex gap-4 items-center">
-                  <input
-                    type="url"
-                    value={formData.profileImage || ''}
-                    onChange={(e) => handleChange('profileImage', e.target.value)}
-                    placeholder="https://images.unsplash.com/..."
-                    className="flex-1 bg-theme-subtle border border-theme-subtle px-4 py-2.5 text-xs font-mono-code text-theme-main focus:outline-none focus:border-[#FF5D22]"
-                  />
-                  {formData.profileImage && (
-                    <div className="w-12 h-12 bg-theme-subtle border border-theme-subtle overflow-hidden flex-shrink-0">
-                      <img
-                        src={formData.profileImage}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
+              <MediaDropzone
+                value={formData.profileImage || ''}
+                onChange={(url) => handleChange('profileImage', url)}
+                label="Athlete Portrait Photo (About & Bio)"
+                sublabel="Drop portrait photo or click to browse (PNG, JPG, WEBP)"
+                aspectRatio="portrait"
+                placeholder="Drop portrait photo here or click to browse"
+              />
             </div>
           )}
 
           {/* TAB 2: PHYSICAL BLUEPRINT */}
           {activeTab === 'physical' && (
             <div className="space-y-6 animate-fadeIn">
-              <div className="p-4 bg-[#FF5D22]/10 border border-[#FF5D22]/30 text-xs font-mono-code text-[#FF5D22]">
-                Official scouting physical measurements showcased on the About & Bio page.
-              </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-mono-code text-theme-muted uppercase tracking-wider mb-2">
@@ -478,7 +458,7 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
           )}
 
           {/* Save / Status Button */}
-          <div className="flex items-center justify-between pt-6 border-t border-theme-subtle">
+          <div className="flex items-center justify-between pt-6 border-t border-theme-subtle shrink-0">
             <div className="text-[11px] font-mono-code text-theme-faint">
               Changes sync instantly across all pages and persist in local storage.
             </div>
