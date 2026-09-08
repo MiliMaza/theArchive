@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Sparkles, CheckCircle2, Trophy, Image, Activity } from 'lucide-react';
+import { X, CheckCircle2 } from 'lucide-react';
 import { Season, SeasonStatus } from '../../../types/career';
 import { useCareer } from '../../../context/CareerContext';
 import { MediaDropzone } from '../../common/MediaDropzone';

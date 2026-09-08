@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Save, Sparkles, Image as ImageIcon, Award, Shield, FileText, CheckCircle } from 'lucide-react';
+import { X, User, Save, CheckCircle } from 'lucide-react';
 import { useCareer } from '../../../context/CareerContext';
 import { PlayerProfile } from '../../../types/career';
 import { MediaDropzone } from '../../common/MediaDropzone';
@@ -151,8 +151,8 @@ export const EditAthleteProfileModal: React.FC<EditAthleteProfileModalProps> = (
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-4 py-2 text-xs font-mono-code uppercase tracking-wider transition-colors cursor-pointer border-b-2 whitespace-nowrap ${activeTab === tab.id
-                  ? 'border-[#FF5D22] text-[#FF5D22] font-bold'
-                  : 'border-transparent text-theme-muted hover:text-theme-main'
+                ? 'border-[#FF5D22] text-[#FF5D22] font-bold'
+                : 'border-transparent text-theme-muted hover:text-theme-main'
                 }`}
             >
               {tab.label}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Sparkles, Trophy, MapPin, Filter, Quote, X, Calendar, Plus, Edit, Trash2 } from 'lucide-react';
+import { BookOpen, Filter, X, Plus, Edit, Trash2 } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 import { Memory } from '../../types/career';
 import { MemoryFormModal } from './MemoryFormModal';

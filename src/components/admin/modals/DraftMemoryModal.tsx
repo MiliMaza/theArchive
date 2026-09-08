@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Sparkles, CheckCircle2, BookOpen, Quote, Image } from 'lucide-react';
+import { X, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useCareer } from '../../../context/CareerContext';
 import { Memory } from '../../../types/career';
 import { MediaDropzone } from '../../common/MediaDropzone';

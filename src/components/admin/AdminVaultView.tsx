@@ -1,24 +1,17 @@
 import React, { useState } from 'react';
 import {
   Lock,
-  CheckCircle2,
-  AlertCircle,
   FileText,
   Plus,
   Edit,
   Trash2,
-  ShieldAlert,
   Upload,
   Eye,
   EyeOff,
-  Sparkles,
-  RotateCcw,
-  Download,
-  ExternalLink,
   User,
   Database,
 } from 'lucide-react';
-import { useCareer, VaultDocument } from '../../context/CareerContext';
+import { useCareer } from '../../context/CareerContext';
 import { Season } from '../../types/career';
 import { LogSeasonModal } from './modals/LogSeasonModal';
 import { UploadMediaModal } from './modals/UploadMediaModal';

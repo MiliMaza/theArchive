@@ -2,27 +2,18 @@ import React, { useState } from 'react';
 import {
   Trophy,
   MapPin,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
-  Flame,
   Users,
   Award,
-  Sparkles,
-  BookOpen,
   Image as ImageIcon,
-  Lock,
   Edit,
   Trash2,
-  AlertTriangle,
-  Activity,
-  Plus,
   Play,
   Video,
 } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
-import { Season } from '../../types/career';
 import { EditSeasonModal } from '../admin/modals/EditSeasonModal';
 import { isMediaVideo } from '../../lib/storage';
 import { useTheme } from '../../context/ThemeContext';

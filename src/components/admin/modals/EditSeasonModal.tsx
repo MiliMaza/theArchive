@@ -10,10 +10,7 @@ import {
   Image as ImageIcon,
   BookOpen,
   Activity,
-  Upload,
-  Sparkles,
   Calculator,
-  Flame,
   Video,
   Loader2,
 } from 'lucide-react';
@@ -1385,11 +1382,10 @@ export const EditSeasonModal: React.FC<EditSeasonModalProps> = ({
                     type="button"
                     onClick={() => handleAddGalleryImage()}
                     disabled={!newImgSrc}
-                    className={`px-5 py-2.5 font-mono-code text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-md ${
-                      newImgSrc
+                    className={`px-5 py-2.5 font-mono-code text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-md ${newImgSrc
                         ? 'bg-[#FF5D22] hover:bg-white text-black ring-2 ring-[#FF5D22]'
                         : 'bg-theme-subtle text-theme-muted border border-theme-subtle opacity-50 cursor-not-allowed'
-                    }`}
+                      }`}
                   >
                     <Plus className="w-4 h-4" />
                     <span>{newImgSrc ? 'Save to Season Gallery Now' : 'Add to Gallery'}</span>

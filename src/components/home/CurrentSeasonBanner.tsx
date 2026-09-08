@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Trophy, Flame, Activity, ShieldCheck, MapPin } from 'lucide-react';
+import { ArrowRight, Trophy, Flame, MapPin } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 
 interface CurrentSeasonBannerProps {

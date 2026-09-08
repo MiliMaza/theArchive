@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, ImageIcon } from 'lucide-react';
+import { X, Save } from 'lucide-react';
 import { Memory } from '../../types/career';
 import { useCareer } from '../../context/CareerContext';
 import { MediaDropzone } from '../common/MediaDropzone';

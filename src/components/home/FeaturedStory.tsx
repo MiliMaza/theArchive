@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, BookOpen, Quote, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
 
 interface FeaturedStoryProps {

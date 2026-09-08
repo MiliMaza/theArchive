@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Trophy } from 'lucide-react';
 import { useCareer } from '../../context/CareerContext';
-import { playerProfile } from '../../data/player';
 import { Season } from '../../types/career';
 
 interface StatsMatrixViewProps {
